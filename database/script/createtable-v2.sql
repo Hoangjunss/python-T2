@@ -21,6 +21,15 @@ CREATE TABLE `Student` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE `FaceEndcoding`(
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `student_id` INT NOT NULL,
+  `face_encoding` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_student_id` (`student_id`)
+)
+
+
 -- Bảng Subject
 CREATE TABLE `Subject` (
   `id` INT NOT NULL AUTO_INCREMENT,
@@ -29,21 +38,37 @@ CREATE TABLE `Subject` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE `TEACHER` (
+       `id` INT NOT NULL AUTO_INCREMENT,
+      `class_id` INT NOT NULL,
+      `fullname` VARCHAR(100) NOT NULL,
+      `gender` VARCHAR(10),
+      `status` VARCHAR(10),
+      `dateOfBirth` DATE,
+      PRIMARY KEY (`id`)
+)
+
+DROP Table class
+
+DROP TABLE Attendances
+
 -- Bảng Class
 CREATE TABLE `Class` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(50) NOT NULL,
   `grade_level` INT,
-  `homeroom_teacher_name` VARCHAR(100),
+  `teacher_id` INT,
   `academic_year` VARCHAR(20),
   `room` VARCHAR(10),
   `total_student` INT,
   `description` VARCHAR(255),
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+    CONSTRAINT `fk_class_teacher`
+    FOREIGN KEY (`id`) REFERENCES `Teacher` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
--- Bảng RollCall
+-- Bảng Attendances
 CREATE TABLE `Attendances` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `class_id` INT NOT NULL,
@@ -73,3 +98,4 @@ CREATE TABLE `score` (
   CONSTRAINT `fk_score_subject`
     FOREIGN KEY (`subject_id`) REFERENCES `Subject` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+

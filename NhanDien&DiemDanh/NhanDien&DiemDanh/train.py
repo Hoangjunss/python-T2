@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import Message ,Text
 import cv2,os
-import shutil
 import csv
 import numpy as np
 from PIL import Image, ImageTk
