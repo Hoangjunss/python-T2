@@ -11,7 +11,8 @@ class Student:
                  address=None, 
                  ethnicity=None, 
                  religion=None, 
-                 nationality=None):
+                 nationality=None,
+                 departmentId=None):
         self.id = id
         self.fullname = fullname
         self.gender = gender
@@ -22,22 +23,25 @@ class Student:
         self.ethnicity = ethnicity
         self.religion = religion
         self.nationality = nationality
+        self.departmentId = departmentId
 
     def __str__(self):
         return (f"Student(id={self.id}, fullname='{self.fullname}', gender='{self.gender}', "
                 f"status='{self.status}', dateOfBirth='{self.dateOfBirth}', academicYear='{self.academicYear}', "
                 f"address='{self.address}', ethnicity='{self.ethnicity}', religion='{self.religion}', "
-                f"nationality='{self.nationality}')")
+                f"nationality='{self.nationality}', departmentId='{self.departmentId}')")
 
     @staticmethod
     def save(student):
         """
-        Thêm một student mới vào bảng `students`.
+        Thêm một student mới vào bảng `Student`.
+        Lưu ý: Nếu cột id được thiết lập tự động tăng (AUTO_INCREMENT), 
+        thì không cần truyền giá trị cho id.
         """
         db = Database()
         query = f"""
-            INSERT INTO student
-            (fullname, gender, status, dateOfBirth, academicYear, address, ethnicity, religion, nationality)
+            INSERT INTO Student
+            (fullname, gender, status, dateOfBirth, academicYear, address, ethnicity, religion, nationality, departmentID)
             VALUES
             ('{student.fullname}',
              '{student.gender}',
@@ -47,7 +51,8 @@ class Student:
              '{student.address}',
              '{student.ethnicity}',
              '{student.religion}',
-             '{student.nationality}')
+             '{student.nationality}',
+             '{student.departmentId}')
         """
         db.exec_query(query)
         db.close()
@@ -55,17 +60,16 @@ class Student:
     @staticmethod
     def get_all():
         """
-        Lấy danh sách tất cả student từ bảng `students`.
+        Lấy danh sách tất cả student từ bảng `Student`.
         """
         db = Database()
-        if db:
-            print("Connected to database")
-        query = "SELECT * FROM student"
+        print("Connected to database")
+        query = "SELECT * FROM Student"
         result = db.fetch_all(query)
         students = []
         for row in result:
-            # row sẽ chứa 11 cột (id, fullname, gender, status, dateOfBirth, academicYear, address, ethnicity, religion, nationality)
-            # row[0] = id, row[1] = fullname, row[2] = gender, ...
+            # Giả định thứ tự các cột là:
+            # id, fullname, gender, status, dateOfBirth, academicYear, address, ethnicity, religion, nationality, departmentID
             students.append(Student(*row))
         db.close()
         return students
@@ -76,10 +80,11 @@ class Student:
         Lấy thông tin 1 student theo id.
         """
         db = Database()
-        query = f"SELECT * FROM student WHERE id = {student_id}"
+        query = f"SELECT * FROM Student WHERE id = {student_id}"
         result = db.fetch_one(query)
         if result:
-            return Student(*result[0])
+            db.close()
+            return Student(*result)
         db.close()
         return None
 
@@ -90,7 +95,7 @@ class Student:
         """
         db = Database()
         query = f"""
-            UPDATE student
+            UPDATE Student
             SET
               fullname = '{student.fullname}',
               gender = '{student.gender}',
@@ -100,7 +105,8 @@ class Student:
               address = '{student.address}',
               ethnicity = '{student.ethnicity}',
               religion = '{student.religion}',
-              nationality = '{student.nationality}'
+              nationality = '{student.nationality}',
+              departmentID = '{student.departmentId}'
             WHERE id = {student.id}
         """
         db.exec_query(query)
@@ -112,6 +118,6 @@ class Student:
         Xóa 1 student theo id.
         """
         db = Database()
-        query = f"DELETE FROM student WHERE id = {student_id}"
+        query = f"DELETE FROM Student WHERE id = {student_id}"
         db.exec_query(query)
         db.close()

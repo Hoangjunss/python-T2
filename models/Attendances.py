@@ -39,9 +39,8 @@ class Attendances:
         query = f"SELECT * FROM Attendances WHERE id = {attendances_id}"
         result = db.fetch_one(query)
         if result:
-            attendances = Attendances(*result[0])
             db.close()
-            return attendances
+            return Attendances(*result)
         db.close()
         return None
 

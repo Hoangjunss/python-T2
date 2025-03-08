@@ -48,10 +48,6 @@ CREATE TABLE `TEACHER` (
       PRIMARY KEY (`id`)
 )
 
-DROP Table class
-
-DROP TABLE Attendances
-
 -- Bảng Class
 CREATE TABLE `Class` (
   `id` INT NOT NULL AUTO_INCREMENT,
@@ -99,3 +95,27 @@ CREATE TABLE `score` (
     FOREIGN KEY (`subject_id`) REFERENCES `Subject` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE HocKy (
+    idHocKy INT PRIMARY KEY,
+    TenHocKy NVARCHAR(50) NOT NULL, 
+    NgayBatDau DATE NOT NULL,
+    NgayKetThuc DATE NOT NULL
+);
+
+CREATE TABLE LichHoc (
+    idLichHoc INT PRIMARY KEY,
+    idKhoa INT NOT NULL,
+    idHocKy INT NOT NULL,
+    MoTa NVARCHAR(255) NULL,   -- mô tả, ví dụ: "Lịch học chính khóa CNTT"
+    CONSTRAINT FK_LichHoc_Khoa FOREIGN KEY (idKhoa) REFERENCES Khoa(idKhoa),
+    CONSTRAINT FK_LichHoc_HocKy FOREIGN KEY (idHocKy) REFERENCES HocKy(idHocKy)
+);
+
+CREATE TABLE LichHocChiTiet (
+    idLichHocChiTiet INT PRIMARY KEY,
+    idLichHoc INT NOT NULL,
+    Thu INT NOT NULL,              -- Giá trị số từ 2 đến 7 (2: Thứ 2, 3: Thứ 3, …, 7: Thứ 7; tùy định theo quy ước của bạn)
+    ThoiGianBatDau TIME NOT NULL,
+    ThoiGianKetThuc TIME NOT NULL,
+    CONSTRAINT FK_LichHocChiTiet_LichHoc FOREIGN KEY (idLichHoc) REFERENCES LichHoc(idLichHoc)
+);
