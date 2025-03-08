@@ -33,11 +33,6 @@ class Student:
 
     @staticmethod
     def save(student):
-        """
-        Thêm một student mới vào bảng `Student`.
-        Lưu ý: Nếu cột id được thiết lập tự động tăng (AUTO_INCREMENT), 
-        thì không cần truyền giá trị cho id.
-        """
         db = Database()
         query = f"""
             INSERT INTO Student

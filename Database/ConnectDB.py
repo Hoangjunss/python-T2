@@ -13,8 +13,8 @@ class Database:
     def exec_query(self, query, values=None):
         self.cursor.execute(query, values or ())
         self.conn.commit()
-        self.cursor.close()  # Đóng cursor sau khi thực thi
-        self.cursor = self.conn.cursor()  # Tạo cursor mới để tránh lỗi unread result
+        self.cursor.close() 
+        self.cursor = self.conn.cursor()
 
     def fetch_all(self, query, values=None):
         self.cursor.execute(query, values or ())
