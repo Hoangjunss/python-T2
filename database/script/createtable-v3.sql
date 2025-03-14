@@ -27,6 +27,8 @@ CREATE TABLE `FaceEndcoding`(
   PRIMARY KEY (`id`)
 )
 
+ALTER TABLE FaceEndcoding ADD CONSTRAINT FK_FaceEndcoding_Student FOREIGN KEY (student_id) REFERENCES student(id);
+
 -- Bảng Class
 CREATE TABLE `Class` (
   `id` INT NOT NULL,
@@ -51,6 +53,8 @@ CREATE TABLE `TEACHER` (
       PRIMARY KEY (`id`)
 )
 
+ALTER TABLE class ADD CONSTRAINT FK_Class_Teacher FOREIGN KEY (teacher_id) REFERENCES TEACHER(id);
+
 CREATE TABLE `Attendances` (
   `id` INT NOT NULL,
   `class_id` INT NOT NULL,
@@ -60,10 +64,16 @@ CREATE TABLE `Attendances` (
    PRIMARY KEY (`id`)
 );
 
+ALTER TABLE Attendances ADD CONSTRAINT FK_Attendances_Student FOREIGN KEY (student_id) REFERENCES student(id);
+ALTER TABLE Attendances ADD CONSTRAINT FK_Attendances_Class FOREIGN KEY (class_id) REFERENCES class(id);
+
+
 CREATE TABLE Department (
     id INT PRIMARY KEY,
     name NVARCHAR(100) NOT NULL
 );
+
+ALTER TABLE student ADD CONSTRAINT FK_Student_Department FOREIGN KEY (departmentID) REFERENCES Department (id);
 
 CREATE TABLE Semester (
     id INT PRIMARY KEY,
