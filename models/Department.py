@@ -51,4 +51,15 @@ class Department:
         query = f"DELETE FROM departments WHERE id = {department_id}"
         db.exec_query(query)
         db.close()
+
+    @staticmethod
+    def count_students_by_department(department_id):
+        db = Database()
+        query = "SELECT COUNT(*) as total_student FROM student WHERE departmentID = %s"
+        result = db.fetch_one(query, (department_id,))
+        if result:
+            db.close()
+            return result[0]
+        db.close()  
+        return 0
         
