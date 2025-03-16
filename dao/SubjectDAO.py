@@ -1,20 +1,20 @@
 from database.ConnectDB import Database
-from models import Subject
+from models.Subject import Subject
 
 
 @staticmethod
-def save(subject):
+def save(subject: Subject):
     db = Database()
     sql = """
-        INSERT INTO Subject (name, numberOfLessons)
-        VALUES (%s, %s)
+        INSERT INTO Subject (id, name, numberOfLessons)
+        VALUES (%s, %s, %s)
     """
-    values = (subject.name, subject.numberOfLessons)
+    values = (subject.id, subject.name, subject.numberOfLessons)
     db.exec_query(sql, values)
     db.close()
 
 @staticmethod
-def update(subject):
+def update(subject: Subject):
     db = Database()
     sql = """
         UPDATE Subject
@@ -26,7 +26,7 @@ def update(subject):
     db.close()
 
 @staticmethod
-def delete(subject_id):
+def delete(subject_id: int):
     db = Database()
     sql = "DELETE FROM Subject WHERE id = %s"
     values = (subject_id,)
@@ -34,7 +34,7 @@ def delete(subject_id):
     db.close()
 
 @staticmethod
-def get_all():
+def get_all() -> list[Subject]:
     db = Database()
     sql = "SELECT * FROM Subject"
     result = db.fetch_all(sql)
@@ -45,7 +45,7 @@ def get_all():
     return subjects
 
 @staticmethod
-def get_by_id(subject_id):
+def get_by_id(subject_id: int) -> Subject:
     db = Database()
     sql = "SELECT * FROM Subject WHERE id = %s"
     result = db.fetch_one(sql, (subject_id,))

@@ -1,8 +1,8 @@
 from database.ConnectDB import Database
-from models import ScheduleDetail
+from models.ScheduleDetail import ScheduleDetail
 
 @staticmethod
-def save(schedule_details):
+def save(schedule_details: ScheduleDetail):
     db = Database()
     sql = "INSERT INTO ScheduleDetail (id, scheduleId, dayOfWeek, startTime, endTime) VALUES (%s, %s, %s, %s)"
     values = (schedule_details.id, schedule_details.scheduleId, schedule_details.dayOfWeek, schedule_details.startTime, schedule_details.endTime)
@@ -10,7 +10,7 @@ def save(schedule_details):
     db.close()
 
 @staticmethod
-def update(schedule_details):
+def update(schedule_details: ScheduleDetail):
     db = Database()
     sql = "UPDATE ScheduleDetail SET scheduleId=%s, dayOfWeek=%s, startTime=%s, endTime=%s WHERE id=%s"
     values = (schedule_details.scheduleId, schedule_details.dayOfWeek, schedule_details.startTime, schedule_details.endTime, schedule_details.id)
@@ -18,7 +18,7 @@ def update(schedule_details):
     db.close()
 
 @staticmethod
-def delete(schedule_details_id):
+def delete(schedule_details_id: int):
     db = Database()
     sql = "DELETE FROM ScheduleDetail WHERE id=%s"
     values = (schedule_details_id,)
@@ -26,7 +26,7 @@ def delete(schedule_details_id):
     db.close()
 
 @staticmethod
-def get_all():
+def get_all() -> list[ScheduleDetail]:
     db = Database()
     sql = "SELECT * FROM ScheduleDetail"
     result = db.exec_query(sql)
@@ -37,7 +37,7 @@ def get_all():
     return result
 
 @staticmethod
-def get_by_id(schedule_id):
+def get_by_id(schedule_id) -> ScheduleDetail:
     db = Database()
     sql = "SELECT * FROM ScheduleDetail WHERE id=%s"
     values = (schedule_id,)
@@ -47,3 +47,15 @@ def get_by_id(schedule_id):
         return ScheduleDetail(*result)
     db.close()
     return None
+
+@staticmethod
+def get_by_schedule_id(schedule_id) -> list[ScheduleDetail]:
+    db = Database()
+    sql = "SELECT * FROM ScheduleDetail WHERE scheduleId=%s"
+    values = (schedule_id,)
+    result = db.exec_query(sql, values)
+    schedule_details = []
+    for row in result:
+        schedule_details.append(ScheduleDetail(*row))
+    db.close()
+    return schedule_details

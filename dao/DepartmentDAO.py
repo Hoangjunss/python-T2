@@ -1,8 +1,8 @@
 from database.ConnectDB import Database
-from models import Department
+from models.Department import Department
 
 @staticmethod
-def save(department):
+def save(department: Department):
     db = Database()
     query = "INSERT INTO departments (id, name) VALUES (%s, %s)"
     values = (department.id, department.name)
@@ -10,7 +10,7 @@ def save(department):
     db.close()
 
 @staticmethod
-def update(department):
+def update(department: Department):
     db = Database()
     query = "UPDATE departments SET name = %s WHERE id = %s"
     values = (department.name, department.id)
@@ -18,7 +18,7 @@ def update(department):
     db.close()
 
 @staticmethod
-def delete(department_id):
+def delete(department_id: int):
     db = Database()
     query = "DELETE FROM departments WHERE id = %s"
     values = (department_id,)
@@ -26,7 +26,7 @@ def delete(department_id):
     db.close()
 
 @staticmethod
-def get_all():
+def get_all() -> list[Department]:
     db = Database()
     query = "SELECT * FROM departments"
     result = db.fetch_all(query)
@@ -37,7 +37,7 @@ def get_all():
     return department
 
 @staticmethod
-def get_by_id(department_id):
+def get_by_id(department_id: int) -> Department:
     db = Database()
     query = f"SELECT * FROM departments WHERE id = {department_id}"
     result = db.fetch_one(query)
@@ -48,7 +48,7 @@ def get_by_id(department_id):
     return None
 
 @staticmethod
-def count_students_by_department(department_id):
+def count_students_by_department(department_id: int) -> int:
     db = Database()
     query = "SELECT COUNT(*) as total_student FROM student WHERE departmentID = %s"
     result = db.fetch_one(query, (department_id,))

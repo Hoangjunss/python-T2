@@ -17,8 +17,11 @@ CREATE TABLE `Student` (
   `religion` VARCHAR(100),
   `nationality` VARCHAR(100),
     `departmentID` INT,
+    `class_id` INT,
   PRIMARY KEY (`id`)
 );
+
+ALTER TABLE Student ADD CONSTRAINT fk_student_class FOREIGN KEY (class_id) REFERENCES class(id);
 
 CREATE TABLE `FaceEndcoding`(
   `id` INT NOT NULL,
@@ -45,11 +48,13 @@ CREATE TABLE `Class` (
 
 CREATE TABLE `TEACHER` (
        `id` INT NOT NULL,
-      `class_id` INT NOT NULL,
       `fullname` VARCHAR(100) NOT NULL,
       `gender` VARCHAR(10),
       `status` VARCHAR(10),
-      `dateOfBirth` DATE,
+      `address` VARCHAR(255),
+      `email` VARCHAR(100),
+      `phone` VARCHAR(10),
+      `department_id` INT,
       PRIMARY KEY (`id`)
 )
 

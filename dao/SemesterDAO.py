@@ -1,8 +1,8 @@
 from database.ConnectDB import Database
-from models import Semester
+from models.Semester import Semester
 
 @staticmethod
-def save(semester):
+def save(semester: Semester):
     db = Database()
     sql = "INSERT INTO Semester (id, name, startdate, enddate) VALUES (%s, %s, %s, %s)"
     values = (semester.id, semester.name, semester.startdate, semester.enddate)
@@ -10,7 +10,7 @@ def save(semester):
     db.close()
 
 @staticmethod
-def update(semester):
+def update(semester: Semester):
     db = Database()
     sql = "UPDATE Semester SET name=%s, startdate=%s, enddate=%s WHERE id=%s"
     values = (semester.name, semester.startdate, semester.enddate, semester.id)
@@ -18,7 +18,7 @@ def update(semester):
     db.close()
 
 @staticmethod
-def delete(semester_id):
+def delete(semester_id: int):
     db = Database()
     sql = "DELETE FROM Semester WHERE id=%s"
     values = (semester_id,)
@@ -26,7 +26,7 @@ def delete(semester_id):
     db.close()
 
 @staticmethod
-def get_all():
+def get_all() -> list[Semester]:
     db = Database()
     sql = "SELECT * FROM Semester"
     results = db.fetch_all(sql)
@@ -37,7 +37,7 @@ def get_all():
     return semesters
     
 @staticmethod
-def get_by_id(semester_id):
+def get_by_id(semester_id)  -> Semester:
     db = Database()
     sql = "SELECT * FROM Semester WHERE id=%s"
     result = db.fetch_one(sql, (semester_id,))
