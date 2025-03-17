@@ -4,7 +4,7 @@ from models.Department import Department
 @staticmethod
 def save(department: Department):
     db = Database()
-    query = "INSERT INTO departments (id, name) VALUES (%s, %s)"
+    query = "INSERT INTO department (id, name) VALUES (%s, %s)"
     values = (department.id, department.name)
     db.exec_query(query, values)
     db.close()
@@ -12,7 +12,7 @@ def save(department: Department):
 @staticmethod
 def update(department: Department):
     db = Database()
-    query = "UPDATE departments SET name = %s WHERE id = %s"
+    query = "UPDATE department SET name = %s WHERE id = %s"
     values = (department.name, department.id)
     db.exec_query(query, values)
     db.close()
@@ -20,7 +20,7 @@ def update(department: Department):
 @staticmethod
 def delete(department_id: int):
     db = Database()
-    query = "DELETE FROM departments WHERE id = %s"
+    query = "DELETE FROM department WHERE id = %s"
     values = (department_id,)
     db.exec_query(query, values)
     db.close()
@@ -28,7 +28,7 @@ def delete(department_id: int):
 @staticmethod
 def get_all() -> list[Department]:
     db = Database()
-    query = "SELECT * FROM departments"
+    query = "SELECT * FROM department"
     result = db.fetch_all(query)
     department = []
     for row in result:
@@ -39,7 +39,7 @@ def get_all() -> list[Department]:
 @staticmethod
 def get_by_id(department_id: int) -> Department:
     db = Database()
-    query = f"SELECT * FROM departments WHERE id = {department_id}"
+    query = f"SELECT * FROM department WHERE id = {department_id}"
     result = db.fetch_one(query)
     if result:
         db.close()
@@ -54,7 +54,7 @@ def count_students_by_department(department_id: int) -> int:
     result = db.fetch_one(query, (department_id,))
     if result:
         db.close()
-        return Department(*result)
+        return result
     db.close()  
     return None
         
