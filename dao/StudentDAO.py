@@ -1,5 +1,7 @@
+
 from database.ConnectDB import Database
 from models.Students import Student
+
 
 @staticmethod
 def save(student: Student):
@@ -7,10 +9,10 @@ def save(student: Student):
     sql = """
         INSERT INTO Student
         (id, fullname, gender, status, dateOfBirth, academicYear, address, ethnicity, religion, nationality, departmentID, class_id)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
     values = (
-        student.fullname, student.gender, student.status, 
+        student.id, student.fullname, student.gender, student.status, 
         student.dateOfBirth, student.academicYear, student.address, 
         student.ethnicity, student.religion, student.nationality, student.departmentId, student.class_id
     )

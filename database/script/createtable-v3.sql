@@ -23,6 +23,9 @@ CREATE TABLE `Student` (
 
 ALTER TABLE Student ADD CONSTRAINT fk_student_class FOREIGN KEY (class_id) REFERENCES class(id);
 
+ALTER TABLE class
+DROP CONSTRAINT Fk_CLass_teacher;;
+
 CREATE TABLE `FaceEndcoding`(
   `id` INT NOT NULL,
   `student_id` INT NOT NULL,
@@ -45,6 +48,7 @@ CREATE TABLE `Class` (
   PRIMARY KEY (`id`)
 );
 
+DROP TABLE teacher;
 
 CREATE TABLE `TEACHER` (
        `id` INT NOT NULL,
