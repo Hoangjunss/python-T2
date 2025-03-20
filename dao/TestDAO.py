@@ -1,23 +1,19 @@
-from dao import StudentDAO, AttendancesDAO, ClassDAO, DepartmentDAO, ScheduleDAO, ScheduleDetailDAO, SemesterDAO, TeacherDAO
+from dao.StudentDAO import StudentDAO
 
 from models.Students import Student
 
-student = Student(
-    id=4,
-    fullname="John Doe",
-    gender="Male",
-    status="Active",
-    dateOfBirth="1990-01-01",
-    academicYear="2020-2021",
-    address="123 Main St, City, State, ZIP",
-    ethnicity="Caucasian",
-    religion="Christian",
-    nationality="American",
-    departmentId=1,
-    class_id=1
-)
+class TestDAO:
+    def __init__(self):
+        print("Test class initialized.")
+        self.student_dao = StudentDAO()
 
-StudentDAO.save(student)
+    def save(self):
+        try:
+            student = Student(id=23453, fullname="John Doe")
+            
+            self.student_dao.save()
+            print("Student saved successfully.")
+        except Exception as e:
+            print(f"Error while saving student: {e}")
 
-print("student saved successfully")
 

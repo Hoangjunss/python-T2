@@ -3,9 +3,13 @@ from tkinter import Image, ttk, messagebox
 from PIL import Image, ImageTk
 import sys
 import os
+import cv2,os
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from dao import DepartmentDAO, StudentDAO
+
+from dao.TestDAO import TestDAO
+from models.Students import Student
 # from models.Students import Student
 
 
@@ -103,9 +107,12 @@ class Student_List(tk.Tk):
         
         btn_delete = tk.Button(frame_btns, text="Xóa", command=self.delete_student)
         btn_delete.pack(fill=tk.X, padx=10, pady=10)
+        btn_delete = tk.Button(frame_btns, text="Chupj Anhr", command=self.TakeImages)
+        btn_delete.pack(fill=tk.X, padx=10, pady=10)
 
         btn_show_detail= tk.Button(frame_btns, text="Chi tiết", command=self.show_details_student)
         btn_show_detail.pack(fill=tk.X, padx=10, pady=10)
+        
 
         #Footer
         frame_footer = tk.Frame(self)
@@ -246,6 +253,42 @@ class Student_List(tk.Tk):
     def clear_filed(self):
         self.entry_search_ID.delete(0, tk.END)
         self.entry_search_Name.delete(0, tk.END)
+    def TakeImages(self):        
+       
+            cam = cv2.VideoCapture(0)
+            harcascadePath = "gui/haarcascade_frontalface_default.xml" # model phát hiện khuôn mặt haarcascade
+            detector=cv2.CascadeClassifier(harcascadePath)
+            sampleNum=0
+            while(True):
+                ret, img = cam.read()
+                gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+                faces = detector.detectMultiScale(gray, 1.3, 5)
+                for (x,y,w,h) in faces:
+                    cv2.rectangle(img,(x,y),(x+w,y+h),(255,0,0),2)        
+
+                    sampleNum=sampleNum+1
+
+                    cv2.imwrite("gui\TrainingImage\ "+"hhh" +"."+"787887"+'.'+ str(sampleNum) + ".jpg", gray[y:y+h,x:x+w]) #luu anh train vao folder
+
+                    cv2.imshow('frame',img)
+
+                if cv2.waitKey(1) & 0xFF == ord('q'):
+                    break
+                elif sampleNum>100: #luu anh cho den khi dc 100 anh
+                    break
+            cam.release()
+            cv2.destroyAllWindows() 
+           
+           
+            print("1")
+            
+            student=Student(id=2322332,fullname="hihi")
+            StudentDAO.save(student)
+        
+        
+          
+       
+        
 
 if __name__ == '__main__':
     app = Student_List()

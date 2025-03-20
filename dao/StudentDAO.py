@@ -2,6 +2,9 @@
 from database.ConnectDB import Database
 from models.Students import Student
 
+class StudentDAO:
+    def __init__(self):
+        print("hello")
 
 @staticmethod
 def save(student: Student):
@@ -19,8 +22,6 @@ def save(student: Student):
     db.exec_query(sql, values)
     db.close()
 
-
-@staticmethod
 def update(student: Student):
     db = Database()
     sql = """
@@ -37,16 +38,12 @@ def update(student: Student):
     )
     db.exec_query(sql, values)
     db.close()
-
-@staticmethod
 def delete(student_id: int):
     db = Database()
     sql = "DELETE FROM Student WHERE id = %s"
     values = (student_id,)
     db.exec_query(sql, values)
     db.close()
-
-@staticmethod
 def get_all() -> list[Student]:
     db = Database()
     sql = "SELECT * FROM Student"
@@ -56,8 +53,6 @@ def get_all() -> list[Student]:
         students.append(Student(*row))
     db.close()
     return students
-
-@staticmethod
 def get_by_id(student_id: int) -> Student:
     db = Database()
     sql = "SELECT * FROM Student WHERE id = %s"
@@ -66,8 +61,6 @@ def get_by_id(student_id: int) -> Student:
     if result:
         return Student(*result)
     return None
-
-@staticmethod
 def get_by_department_id(department_id: int) -> list[Student]:
     db = Database()
     sql = "SELECT * FROM Student WHERE departmentID = %s"
@@ -77,8 +70,6 @@ def get_by_department_id(department_id: int) -> list[Student]:
         students.append(Student(*row))
     db.close()
     return students
-
-@staticmethod
 def get_by_class_id(class_id: int) -> list[Student]:
     db = Database()
     sql = "SELECT * FROM Student WHERE class_id = %s"
