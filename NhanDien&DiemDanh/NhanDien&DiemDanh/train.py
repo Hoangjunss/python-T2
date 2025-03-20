@@ -9,6 +9,9 @@ import datetime
 import time
 import tkinter.ttk as ttk
 import tkinter.font as font
+from dao.StudentDAO import StudentDAO
+from models.Students import Student
+
 
 window = tk.Tk()
 #helv36 = tk.Font(family='Helvetica', size=36, weight='bold')
@@ -111,6 +114,8 @@ def TakeImages():
         cam.release()
         cv2.destroyAllWindows() 
         res = "Ảnh đã được lưu với ID : " + Id +" - Tên : "+ name
+        student = Student(Id, name)
+        StudentDAO().insertStudent(student)
         row = [Id , name]
         with open('StudentDetails\StudentDetails.csv','a+') as csvFile:
             writer = csv.writer(csvFile)
