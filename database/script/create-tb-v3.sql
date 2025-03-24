@@ -1,3 +1,9 @@
+-- Active: 1704807633484@@127.0.0.1@3306@student_information_management
+-- Active: 1742819810405@@127.0.0.1@1521@SYSTEM
+
+DROP DATABASE IF EXISTS student_information_management;
+
+CREATE DATABASE student_information_management;
 
 USE student_information_management;
 
@@ -17,10 +23,7 @@ CREATE TABLE `Student` (
   PRIMARY KEY (`id`)
 );
 
-ALTER TABLE Student ADD CONSTRAINT fk_student_class FOREIGN KEY (class_id) REFERENCES class(id);
 
-ALTER TABLE class
-DROP CONSTRAINT Fk_CLass_teacher;;
 
 CREATE TABLE `FaceEndcoding`(
   `id` INT NOT NULL,
@@ -29,7 +32,6 @@ CREATE TABLE `FaceEndcoding`(
   PRIMARY KEY (`id`)
 )
 
-ALTER TABLE FaceEndcoding ADD CONSTRAINT FK_FaceEndcoding_Student FOREIGN KEY (student_id) REFERENCES student(id);
 
 -- Bảng Class
 CREATE TABLE `Class` (
@@ -44,10 +46,10 @@ CREATE TABLE `Class` (
   PRIMARY KEY (`id`)
 );
 
-DROP TABLE teacher;
 
 CREATE TABLE `TEACHER` (
        `id` INT NOT NULL,
+       `username` VARCHAR(20),
       `fullname` VARCHAR(100) NOT NULL,
       `gender` VARCHAR(10),
       `status` VARCHAR(10),
@@ -58,7 +60,6 @@ CREATE TABLE `TEACHER` (
       PRIMARY KEY (`id`)
 )
 
-ALTER TABLE class ADD CONSTRAINT FK_Class_Teacher FOREIGN KEY (teacher_id) REFERENCES TEACHER(id);
 
 CREATE TABLE `Attendances` (
   `id` INT NOT NULL,
@@ -70,20 +71,16 @@ CREATE TABLE `Attendances` (
    PRIMARY KEY (`id`)
 );
 
-ALTER TABLE attendances ADD COLUMN scheduledetail_id INT NOT NULL;
 
-ALTER TABLE attendances ADD CONSTRAINT FK_Attendances_ScheduleDetail FOREIGN KEY (scheduledetail_id) REFERENCES ScheduleDetail(id);
-
-ALTER TABLE Attendances ADD CONSTRAINT FK_Attendances_Student FOREIGN KEY (student_id) REFERENCES student(id);
-ALTER TABLE Attendances ADD CONSTRAINT FK_Attendances_Class FOREIGN KEY (class_id) REFERENCES class(id);
 
 
 CREATE TABLE Department (
     id INT PRIMARY KEY,
-    name NVARCHAR(100) NOT NULL
+    name NVARCHAR(100) NOT NULL,
+    dean_id INT
 );
 
-ALTER TABLE student ADD CONSTRAINT FK_Student_Department FOREIGN KEY (departmentID) REFERENCES Department (id);
+
 
 CREATE TABLE Semester (
     id INT PRIMARY KEY,
@@ -109,3 +106,19 @@ CREATE TABLE ScheduleDetail (
     endTime TIME NOT NULL,
     CONSTRAINT FK_ScheduleDetail_Schedule FOREIGN KEY (scheduleID) REFERENCES Schedule(id)
 );
+
+ALTER TABLE Student ADD CONSTRAINT fk_student_class FOREIGN KEY (class_id) REFERENCES class(id);
+
+ALTER TABLE FaceEndcoding ADD CONSTRAINT FK_FaceEndcoding_Student FOREIGN KEY (student_id) REFERENCES student(id);
+
+ALTER TABLE class ADD CONSTRAINT FK_Class_Teacher FOREIGN KEY (teacher_id) REFERENCES TEACHER(id);
+
+ALTER TABLE attendances ADD CONSTRAINT FK_Attendances_ScheduleDetail FOREIGN KEY (scheduledetail_id) REFERENCES ScheduleDetail(id);
+
+ALTER TABLE Attendances ADD CONSTRAINT FK_Attendances_Student FOREIGN KEY (student_id) REFERENCES student(id);
+
+ALTER TABLE Attendances ADD CONSTRAINT FK_Attendances_Class FOREIGN KEY (class_id) REFERENCES class(id);
+
+ALTER TABLE student ADD CONSTRAINT FK_Student_Department FOREIGN KEY (departmentID) REFERENCES Department (id);
+
+ALTER TABLE department ADD constraint FK_Department_Dean FOREIGN KEY (dean_id) REFERENCES teacher(id);
