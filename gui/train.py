@@ -106,7 +106,7 @@ def TakeImages():
 
                 sampleNum=sampleNum+1
 
-                cv2.imwrite("TrainingImage\ "+name +"."+Id +'.'+ str(sampleNum) + ".jpg", gray[y:y+h,x:x+w]) #luu anh train vao folder
+                cv2.imwrite("gui\TrainingImage\ "+name +"."+Id +'.'+ str(sampleNum) + ".jpg", gray[y:y+h,x:x+w]) #luu anh train vao folder
 
                 cv2.imshow('frame',img)
 
@@ -118,11 +118,10 @@ def TakeImages():
         cv2.destroyAllWindows() 
         res = "Ảnh đã được lưu với ID : " + Id +" - Tên : "+ name
         row = [Id , name]
-        print("1")
-        testDAO = TestDAO()
-        testDAO.save()
-       
-      
+        with open('gui\StudentDetails\StudentDetails.csv','a+') as csvFile:
+            writer = csv.writer(csvFile)
+            writer.writerow(row)
+        csvFile.close()
         message.configure(text= res)
     else:
         if (is_number(Id)):
@@ -131,14 +130,17 @@ def TakeImages():
         if (name.isalpha()):
             res = "Enter Numeric Id"
             message.configure(text=res)
+       
+      
+
     
 def TrainImages():
     recognizer = cv2.face_LBPHFaceRecognizer.create()
-    harcascadePath = "haarcascade_frontalface_default.xml"
+    harcascadePath = "gui/haarcascade_frontalface_default.xml"
     detector =cv2.CascadeClassifier(harcascadePath)
-    faces,Id = getImagesAndLabels("TrainingImage")
+    faces,Id = getImagesAndLabels("gui/TrainingImage")
     recognizer.train(faces, np.array(Id))
-    recognizer.save("TrainingImageLabel\Trainner.yml") # lưu model mới train vào thư mục
+    recognizer.save("gui/TrainingImageLabel\Trainner.yml") # lưu model mới train vào thư mục
     res = "Train thành công"#+",".join(str(f) for f in Id)
     message.configure(text= res)
 
