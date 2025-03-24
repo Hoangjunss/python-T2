@@ -28,7 +28,7 @@ def delete(id: int):
 @staticmethod
 def get_all() -> list[Attendances]:
     db = Database()
-    sql = "SELECT * FROM Attendances"
+    sql = "SELECT * FROM attendances"
     result = db.fetch_all(sql)
     attendances = []
     for row in result:
