@@ -67,3 +67,32 @@ def get_by_class_id(class_id: int) -> list[Attendances]:
     for row in result:
         attendances.append(Attendances(*row))
     return attendances
+
+@staticmethod
+def get_addtendent_by_time(time=None, classid=None, studentid=None) -> list[Attendances]:
+    db = Database()
+        
+    if time:
+        sql = "SELECT * FROM Attendances WHERE DATE(checkin_time) = DATE(%s)"
+        values = (time,)
+    else:
+        sql = "SELECT * FROM Attendances WHERE DATE(checkin_time) = CURDATE()"
+        values = ()
+
+    if classid:
+        sql += " AND class_id = %s"
+        values += (classid,)
+
+    if studentid:
+        sql += " AND student_id = %s"
+        values += (studentid,)
+        
+    try:
+        result = db.fetch_all(sql, values)
+        attendances = [Attendances(*row) for row in result]
+        return attendances
+    except Exception as e:
+        print(f"Error while fetching attendance: {e}")
+        return []
+    finally:
+        db.close()
