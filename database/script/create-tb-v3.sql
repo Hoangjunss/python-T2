@@ -1,7 +1,3 @@
-DROP DATABASE student_information_management;
-
-CREATE DATABASE student_information_management
-    DEFAULT CHARACTER SET = 'utf8mb4';
 
 USE student_information_management;
 

@@ -9,6 +9,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from dao import AttendancesDAO, ClassDAO, DepartmentDAO, StudentDAO
 import datetime
 import time
+from datetime import datetime
 
 
 from dao.TestDAO import TestDAO
@@ -108,7 +109,51 @@ class DiemDanh(tk.Tk):
         self.tree.heading(col, command=lambda: self.treeview_sort_column(col, not reverse))
     
     def diem_danh(self):
-       print('1')
+        recognizer = cv2.face.LBPHFaceRecognizer_create()#cv2.createLBPHFaceRecognizer()
+        recognizer.read("gui/TrainingImageLabel/Trainner.yml")
+        harcascadePath = "gui/haarcascade_frontalface_default.xml"
+        faceCascade = cv2.CascadeClassifier(harcascadePath);    
+        # df=pd.read_csv("StudentDetails\StudentDetails.csv")
+        cam = cv2.VideoCapture(0)
+        font = cv2.FONT_HERSHEY_SIMPLEX        
+        col_names =  ['Id','Name','Date','Time']
+        attendance = pd.DataFrame(columns = col_names)    
+        while True:
+            ret, im =cam.read()
+            gray=cv2.cvtColor(im,cv2.COLOR_BGR2GRAY)
+            faces=faceCascade.detectMultiScale(gray, 1.2,5)    
+            for(x,y,w,h) in faces:
+                cv2.rectangle(im,(x,y),(x+w,y+h),(225,0,0),2)
+                Id, conf = recognizer.predict(gray[y:y+h,x:x+w])                                   
+                if(conf < 50):
+                    print(Id)
+                    student=StudentDAO.get_by_id(Id)
+                    ts = time.time()      
+                   
+                    # Lấy thời gian hiện tại
+                    current_time = datetime.now()
+
+                    # Chuyển sang định dạng MySQL DATETIME
+                    formatted_time = current_time.strftime('%Y-%m-%d %H:%M:%S')
+                   # aa=df.loc[df['Id'] == Id]['Name'].values
+                    tt=str(Id)+"-"+student.fullname
+                    attendance.loc[len(attendance)] = [Id,student.fullname,current_time,current_time]
+                   
+                    
+                else:
+                    Id='Unknown'                
+                    tt=str(Id)             
+                cv2.putText(im,str(tt),(x,y+h), font, 1,(255,255,255),2)        
+            attendance=attendance.drop_duplicates(subset=['Id'],keep='first')    
+            cv2.imshow('im',im) 
+            if (cv2.waitKey(1)==ord('q')):
+                break
+            
+        cam.release()
+        attendances=Attendances(id=1123, class_id=student.class_id, student_id=student.id, status="Điểm danh thành công", checkin_time=formatted_time)
+        AttendancesDAO.save(attendances=attendances)
+        cv2.destroyAllWindows()
+        self.refresh_list()
         
 if __name__ == '__main__':
     app = DiemDanh()
