@@ -70,8 +70,13 @@ CREATE TABLE `Attendances` (
   `student_id` INT NOT NULL,
   `status` VARCHAR(20),
   `checkin_time` DATETIME,
+  `scheduledetail_id` INT,
    PRIMARY KEY (`id`)
 );
+
+ALTER TABLE attendances ADD COLUMN scheduledetail_id INT NOT NULL;
+
+ALTER TABLE attendances ADD CONSTRAINT FK_Attendances_ScheduleDetail FOREIGN KEY (scheduledetail_id) REFERENCES ScheduleDetail(id);
 
 ALTER TABLE Attendances ADD CONSTRAINT FK_Attendances_Student FOREIGN KEY (student_id) REFERENCES student(id);
 ALTER TABLE Attendances ADD CONSTRAINT FK_Attendances_Class FOREIGN KEY (class_id) REFERENCES class(id);
