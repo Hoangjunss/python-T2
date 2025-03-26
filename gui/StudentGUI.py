@@ -6,8 +6,9 @@ import os
 import cv2,os
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from dao import ClassDAO, DepartmentDAO, StudentDAO
 
+from dao import ClassDAO, DepartmentDAO, StudentDAO
+from gui.UI import AddStudentGUI
 from dao.TestDAO import TestDAO
 from models.Students import Student
 # from models.Students import Student
@@ -105,7 +106,7 @@ class Student_List(tk.Tk):
 
         tk.Label(frame_btns, text="Chức năng:", font=("Arial", 12)).pack(side=tk.TOP, pady=20)
 
-        btn_add = tk.Button(frame_btns, text="Thêm", width=20)
+        btn_add = tk.Button(frame_btns, text="Thêm", width=20, command= self.add_student)
         btn_add.pack(fill= tk.X, padx=10, pady=10)
 
         btn_edit = tk.Button(frame_btns, text="Sửa", command=lambda: self.show_details_student(edit_mode=True))
@@ -148,6 +149,10 @@ class Student_List(tk.Tk):
             print(f"Error: {e}")
             messagebox.showerror("Error", str(e))   
     
+    def add_student(self):
+        add_window = AddStudentGUI(self)  # Mở cửa sổ thêm sinh viên
+        add_window.grab_set()
+
     def delete_student(self):
         selected_item = self.tree.selection()
         if selected_item:
