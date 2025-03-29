@@ -1,11 +1,12 @@
 
 class Attendances:
-    def __init__(self, id, class_id, student_id, status, checkin_time):
+    def __init__(self, id, class_id, student_id, status, checkin_time, scheduledetail_id):
         self.id = id
         self.class_id = class_id
         self.student_id = student_id
         self.status = status
         self.checkin_time = checkin_time
+        self.scheduledetail_id = scheduledetail_id
 
     def __str__(self):
         return (f"Attendances(id={self.id}, class_id={self.class_id}, student_id={self.student_id}, "
