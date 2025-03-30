@@ -52,7 +52,10 @@ class AddStudentGUI(tk.Toplevel):
             fullname=self.textName.get(),
             gender=self.gender_combobox.get(),
             # dateOfBirth=self.textBirth.get(),
+            academicYear=self.textBranch.get(),
             address=self.textAddress.get("1.0", "end-1c"),
+            ethnicity= self.textEthnicity.get(),
+            religion= self.textReligion.get(),
             departmentId=self.department_map.get(self.selected_department.get()),
             class_id= self.class_map.get(self.selected_class.get())
         )
@@ -213,7 +216,7 @@ class AddStudentGUI(tk.Toplevel):
         labelName.place(x = 15, y =100)
         labelName.config(bg= "white")
 
-        labelBranch = tk.Label(frame, text = "Ngành học:", font =("Times New Roman", 20))
+        labelBranch = tk.Label(frame, text = "Khóa học:", font =("Times New Roman", 20))
         labelBranch.config(bg ="white")
         labelBranch.place(x = 15, y =140)
 
@@ -233,17 +236,21 @@ class AddStudentGUI(tk.Toplevel):
         labelSex.place(x =15, y =300)
         labelSex.config(bg ="white")
 
-        labelPhoneNumber = tk.Label(frame, text = "Số điện thoại: ", font =("Times New Roman", 20))
+        labelPhoneNumber = tk.Label(frame, text = "Dân tộc: ", font =("Times New Roman", 20))
         labelPhoneNumber.place(x =15 , y = 340)
         labelPhoneNumber.config(bg ="white")
 
-        labelIdentify = tk.Label(frame, text ="Căn cước công dân: ", font =("Times New Roman", 20))
+        labelIdentify = tk.Label(frame, text ="Tôn giáo: ", font =("Times New Roman", 20))
         labelIdentify.place(x = 15, y = 380)
         labelIdentify.config(bg = "white")
 
         labelAddress = tk.Label(frame, text ="Địa chỉ: ", font = ("Times New Roman", 20))
         labelAddress.place(x = 15, y =420)
         labelAddress.config(bg ="white")
+
+        labelNationaly = tk.Label(frame, text ="Quốc tịch: ", font = ("Times New Roman", 20))
+        labelNationaly.place(x = 15, y =490)
+        labelNationaly.config(bg ="white")
 
         # textID = tk.Entry(frame, font =("Times New Roman", 20), width = 30,borderwidth =1)
         # textID.place(x = 250, y = 60)
@@ -262,8 +269,8 @@ class AddStudentGUI(tk.Toplevel):
                                     , highlightthickness = 1, highlightbackground = "blue")
         buttonChangeName.place(x = 685, y = 102)
 
-        textBranch = tk.Entry(frame, font=("Times New Roman", 20), width =30, bg ="white",borderwidth =1)
-        textBranch.place(x = 250, y =140)
+        self.textBranch = tk.Entry(frame, font=("Times New Roman", 20), width =30, bg ="white",borderwidth =1)
+        self.textBranch.place(x = 250, y =140)
 
         buttonChangeBranch = tk.Button(frame, text = "Sửa", font = ("Times New Roman", 15), height = 1, bd = 0, bg = "white", fg = "blue"
                                     , highlightthickness = 1, highlightbackground = "blue")
@@ -349,15 +356,15 @@ class AddStudentGUI(tk.Toplevel):
         #                             , highlightthickness = 1, highlightbackground = "blue")
         # buttonChangeSex.place(x = 685, y = 302)
 
-        textPhoneNumber = tk.Entry(frame, font =("Times New Roman", 20), width =30, bg ="white",borderwidth =1)
-        textPhoneNumber.place(x = 250, y =340)
+        self.textEthnicity = tk.Entry(frame, font =("Times New Roman", 20), width =30, bg ="white",borderwidth =1)
+        self.textEthnicity.place(x = 250, y =340)
 
         buttonChangePhone = tk.Button(frame, text = "Sửa", font = ("Times New Roman", 15), height = 1, bd = 0, bg = "white", fg = "blue"
                                     , highlightthickness = 1, highlightbackground = "blue")
         buttonChangePhone.place(x = 685, y = 342)
 
-        textIdentify = tk.Entry(frame, font = ("Times New Roman", 20), width = 30, borderwidth =1)
-        textIdentify.place(x =250, y = 380)
+        self.textReligion = tk.Entry(frame, font = ("Times New Roman", 20), width = 30, borderwidth =1)
+        self.textReligion.place(x =250, y = 380)
 
         buttonChangeIdentify = tk.Button(frame, text = "Sửa", font = ("Times New Roman", 15), height = 1, bd = 0, bg = "white", fg = "blue"
                                         , highlightthickness = 1, highlightbackground = "blue")
@@ -369,6 +376,12 @@ class AddStudentGUI(tk.Toplevel):
         buttonChangeAddress = tk.Button(frame, text = "Sửa", font = ("Times New Roman", 15), height = 1, bd = 0, bg = "white", fg = "blue"
                                         , highlightthickness = 1, highlightbackground = "blue")
         buttonChangeAddress.place(x = 685, y = 422)
+
+        self.textNationaly = tk.Entry(frame, font = ("Times New Roman", 20),width = 30, height = 2, borderwidth =1)
+        self.textNationaly.place(x =250 , y = 490)
+        buttonChangeNationaly = tk.Button(frame, text = "Sửa", font = ("Times New Roman", 15), height = 1, bd = 0, bg = "white", fg = "blue"
+                                        , highlightthickness = 1, highlightbackground = "blue")
+        buttonChangeNationaly.place(x = 685, y = 492)
 
         # buttonImgStudent = tk.Button(frame, text ="Ảnh sinh viên", font = ("Times New Roman", 20), bg ="white", fg = "black", bd = 0)
         # buttonImgStudent.place(x =870, y =290)
