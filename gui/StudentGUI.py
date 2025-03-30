@@ -50,7 +50,7 @@ class Student_List(tk.Tk):
         self.entry_search_Name = tk.Entry(frame_search, width=15)
         self.entry_search_Name.pack(side=tk.LEFT, padx= 3)
 
-        icon_image = Image.open("D:\\University\\Pyhon-T2\\python-T2\\dataset\\img_icon\\refresh_icon.png")
+        icon_image = Image.open("D:\\University\\Exercise\\PYTHON\\python-T2\\dataset\\img_icon\\refresh_icon.png")
         icon_image= icon_image.resize((20, 20), Image.LANCZOS)
         icon_photo = ImageTk.PhotoImage(icon_image)
 
@@ -448,8 +448,6 @@ class Student_List(tk.Tk):
             student=Student(id=2322332,fullname="hihi")
             StudentDAO.save(student)
         
-        
-          
        
         
 

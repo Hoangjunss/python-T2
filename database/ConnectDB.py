@@ -11,10 +11,14 @@ class Database:
         self.cursor = self.conn.cursor()
 
     def exec_query(self, query, values=None):
-        self.cursor.execute(query, values or ())
-        self.conn.commit()
-        self.cursor.close() 
-        self.cursor = self.conn.cursor()
+        try:
+            self.cursor.execute(query, values or ())
+            self.conn.commit() 
+        except mysql.connector.Error as e:
+            self.conn.rollback() 
+            print("Database error:", e)
+            raise e 
+
 
     def fetch_all(self, query, values=None):
         self.cursor.execute(query, values or ())
