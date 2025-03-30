@@ -49,7 +49,7 @@ CREATE TABLE `Class` (
 
 CREATE TABLE `TEACHER` (
        `id` INT NOT NULL,
-       `username` VARCHAR(20),
+       
       `fullname` VARCHAR(100) NOT NULL,
       `gender` VARCHAR(10),
       `status` VARCHAR(10),
@@ -57,6 +57,7 @@ CREATE TABLE `TEACHER` (
       `email` VARCHAR(100),
       `phone` VARCHAR(10),
       `department_id` INT,
+      `username` VARCHAR(20),
       PRIMARY KEY (`id`)
 )
 

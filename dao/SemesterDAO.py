@@ -46,3 +46,13 @@ def get_by_id(semester_id)  -> Semester:
         return Semester(*result)
     return None
 
+@staticmethod
+def get_by_department_id(department_id) -> list[Semester]:
+    db = Database()
+    sql = "SELECT s.* FROM Semester s INNER JOIN schedule sh on s.id = sh.semesterID WHERE sh.departmentID = %s"
+    result = db.fetch_all(sql, (department_id,))
+    semesters = []
+    for row in result:
+        semesters.append(Semester(*row))
+    db.close()
+    return semesters

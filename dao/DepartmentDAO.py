@@ -4,16 +4,16 @@ from models.Department import Department
 @staticmethod
 def save(department: Department):
     db = Database()
-    query = "INSERT INTO department (id, name) VALUES (%s, %s)"
-    values = (department.id, department.name)
+    query = "INSERT INTO department (id, name, dean_id) VALUES (%s, %s, %s)"
+    values = (department.id, department.name, department.dean_id)
     db.exec_query(query, values)
     db.close()
 
 @staticmethod
 def update(department: Department):
     db = Database()
-    query = "UPDATE department SET name = %s WHERE id = %s"
-    values = (department.name, department.id)
+    query = "UPDATE department SET name = %s, dean_id = %s WHERE id = %s"
+    values = (department.name, department.dean_id, department.id)
     db.exec_query(query, values)
     db.close()
 
