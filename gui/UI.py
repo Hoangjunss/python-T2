@@ -47,9 +47,12 @@ class AddStudentGUI(tk.Toplevel):
         return int(uuid.uuid4().int % (2**29))
 
     def saveStudent(self):
+      
+        self.fullname = self.textName.get()
+
         student = Student(
-            id=self.generate_unique_id(),
-            fullname=self.textName.get(),
+            id= self.id,
+            fullname=self.fullname,
             gender=self.gender_combobox.get(),
             # dateOfBirth=self.textBirth.get(),
             academicYear=self.textBranch.get(),
@@ -67,6 +70,7 @@ class AddStudentGUI(tk.Toplevel):
             cam = cv2.VideoCapture(0)
             harcascadePath = "gui/haarcascade_frontalface_default.xml" # model phát hiện khuôn mặt haarcascade
             detector=cv2.CascadeClassifier(harcascadePath)
+            self.id=self.generate_unique_id()
             sampleNum=0
             while(True):
                 ret, img = cam.read()
@@ -77,7 +81,7 @@ class AddStudentGUI(tk.Toplevel):
 
                     sampleNum=sampleNum+1
 
-                    cv2.imwrite("gui\TrainingImage\ "+"hhh" +"."+"787887"+'.'+ str(sampleNum) + ".jpg", gray[y:y+h,x:x+w]) #luu anh train vao folder
+                    cv2.imwrite("gui\TrainingImage\ "+ self.textName.get() +"."+ str(self.id)+'.'+ str(sampleNum) + ".jpg", gray[y:y+h,x:x+w]) #luu anh train vao folder
 
                     cv2.imshow('frame',img)
 
@@ -248,9 +252,9 @@ class AddStudentGUI(tk.Toplevel):
         labelAddress.place(x = 15, y =420)
         labelAddress.config(bg ="white")
 
-        labelNationaly = tk.Label(frame, text ="Quốc tịch: ", font = ("Times New Roman", 20))
-        labelNationaly.place(x = 15, y =490)
-        labelNationaly.config(bg ="white")
+        # labelNationaly = tk.Label(frame, text ="Quốc tịch: ", font = ("Times New Roman", 20))
+        # labelNationaly.place(x = 15, y =490)
+        # labelNationaly.config(bg ="white")
 
         # textID = tk.Entry(frame, font =("Times New Roman", 20), width = 30,borderwidth =1)
         # textID.place(x = 250, y = 60)
@@ -377,11 +381,11 @@ class AddStudentGUI(tk.Toplevel):
                                         , highlightthickness = 1, highlightbackground = "blue")
         buttonChangeAddress.place(x = 685, y = 422)
 
-        self.textNationaly = tk.Entry(frame, font = ("Times New Roman", 20),width = 30, height = 2, borderwidth =1)
-        self.textNationaly.place(x =250 , y = 490)
-        buttonChangeNationaly = tk.Button(frame, text = "Sửa", font = ("Times New Roman", 15), height = 1, bd = 0, bg = "white", fg = "blue"
-                                        , highlightthickness = 1, highlightbackground = "blue")
-        buttonChangeNationaly.place(x = 685, y = 492)
+        # self.textNationaly = tk.Entry(frame, font = ("Times New Roman", 20),width = 30, height = 2, borderwidth =1)
+        # self.textNationaly.place(x =250 , y = 490)
+        # buttonChangeNationaly = tk.Button(frame, text = "Sửa", font = ("Times New Roman", 15), height = 1, bd = 0, bg = "white", fg = "blue"
+        #                                 , highlightthickness = 1, highlightbackground = "blue")
+        # buttonChangeNationaly.place(x = 685, y = 492)
 
         # buttonImgStudent = tk.Button(frame, text ="Ảnh sinh viên", font = ("Times New Roman", 20), bg ="white", fg = "black", bd = 0)
         # buttonImgStudent.place(x =870, y =290)
