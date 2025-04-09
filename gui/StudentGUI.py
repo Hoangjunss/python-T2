@@ -50,7 +50,7 @@ class Student_List(tk.Tk):
         self.entry_search_Name = tk.Entry(frame_search, width=15)
         self.entry_search_Name.pack(side=tk.LEFT, padx= 3)
 
-        icon_image = Image.open("D:\\University\\Exercise\\PYTHON\\python-T2\\dataset\\img_icon\\refresh_icon.png")
+        icon_image = Image.open(r".\dataset\img_icon\refresh_icon.png")
         icon_image= icon_image.resize((20, 20), Image.LANCZOS)
         icon_photo = ImageTk.PhotoImage(icon_image)
 
@@ -113,8 +113,6 @@ class Student_List(tk.Tk):
         btn_edit.pack(fill=tk.X, padx=10, pady=10)
         
         btn_delete = tk.Button(frame_btns, text="Xóa", command=self.delete_student)
-        btn_delete.pack(fill=tk.X, padx=10, pady=10)
-        btn_delete = tk.Button(frame_btns, text="Chupj Anhr", command=self.TakeImages)
         btn_delete.pack(fill=tk.X, padx=10, pady=10)
 
         btn_show_detail= tk.Button(frame_btns, text="Chi tiết", command=self.show_details_student)
