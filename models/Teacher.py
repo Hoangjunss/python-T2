@@ -1,6 +1,7 @@
 class Teacher:
     def __init__(self, 
                 id=None,
+                username=None, 
                 fullname=None, 
                 gender=None,
                 status=None, 
@@ -8,9 +9,10 @@ class Teacher:
                 email=None, 
                 phone=None, 
                 department_id=None,
-                username=None, 
+                
                 ):
         self.id = id
+        self.username = username
         self.fullname = fullname
         self.gender = gender
         self.status = status
@@ -18,7 +20,7 @@ class Teacher:
         self.email = email
         self.phone = phone
         self.department_id = department_id
-        self.username = username
+        
 
 
     def __str__(self):

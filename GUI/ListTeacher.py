@@ -7,22 +7,22 @@ import cv2,os
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from dao import ClassDAO, DepartmentDAO, StudentDAO,TeacherDAO
-from gui.UI import AddStudentGUI ,AddTeacherGUI
+from dao import ClassDAO, DepartmentDAO, TeacherDAO
+from gui.UI import AddTeacherGUI
 from dao.TestDAO import TestDAO
-from models.Students import Student
-# from models.Students import Student
+from models.Teacher import Teacher
+# from models.teachers import teacher
 
 
-class Student_List(tk.Tk):
+class Teacher_List(tk.Tk):
     def __init__(self):
         super().__init__()
         self.gui_DSGV()
-        self.refresh_student_list() 
+        self.refresh_teacher_list() 
         self.mainloop()
 
     def gui_DSGV(self):
-        self.title('Phần Mềm Quản Lý Giáo Viên')
+        self.title('Quản Lý Giáo Viên')
         self.geometry('1000x750')
 
         # Phần trên (tiêu đề và tìm kiếm)
@@ -50,10 +50,7 @@ class Student_List(tk.Tk):
         self.entry_search_Name = tk.Entry(frame_search, width=15)
         self.entry_search_Name.pack(side=tk.LEFT, padx= 3)
 
-     
-
-        
-        btn_search = tk.Button(frame_search, text="Tìm Kiếm", width=15, command=self.find_student)
+        btn_search = tk.Button(frame_search, text="Tìm Kiếm", width=15, command=self.find_teacher)
         btn_search.pack(side=tk.RIGHT, padx=5)
 
         #Phần dưới (bảng và các nút)
@@ -105,7 +102,7 @@ class Student_List(tk.Tk):
         self.tree.pack(side=tk.LEFT, expand=True, fill=tk.BOTH)
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
-        # self.after(100, self.refresh_student_list)
+        # self.after(100, self.refresh_teacher_list)
 
         #Các nút chức năng
 
@@ -117,18 +114,18 @@ class Student_List(tk.Tk):
 
         tk.Label(frame_btns, text="Chức năng:", font=("Arial", 12)).pack(side=tk.TOP, pady=20)
 
-        btn_add = tk.Button(frame_btns, text="Thêm", width=20, command= self.add_student)
+        btn_add = tk.Button(frame_btns, text="Thêm", width=20, command= self.add_teacher)
         btn_add.pack(fill= tk.X, padx=10, pady=10)
 
-        btn_edit = tk.Button(frame_btns, text="Sửa", command=lambda: self.show_details_student(edit_mode=True))
+        btn_edit = tk.Button(frame_btns, text="Sửa", command=lambda: self.show_details_teacher(edit_mode=True))
         btn_edit.pack(fill=tk.X, padx=10, pady=10)
         
-        btn_delete = tk.Button(frame_btns, text="Xóa", command=self.delete_student)
+        btn_delete = tk.Button(frame_btns, text="Xóa", command=self.delete_teacher)
         btn_delete.pack(fill=tk.X, padx=10, pady=10)
 
-        btn_show_detail= tk.Button(frame_btns, text="Chi tiết", command=self.show_details_student)
+        btn_show_detail= tk.Button(frame_btns, text="Chi tiết", command=self.show_details_teacher)
         btn_show_detail.pack(fill=tk.X, padx=10, pady=10)
-        self.tree.bind("<Double-1>", self.show_details_student)
+        self.tree.bind("<Double-1>", self.show_details_teacher)
 
         #Footer
         frame_footer = tk.Frame(self)
@@ -137,45 +134,49 @@ class Student_List(tk.Tk):
         btn_back = tk.Button(frame_footer, text="Trở về", width=15, command=self.destroy)# tạm thời khi nhấn sẽ tắt 
         btn_back.pack(side=tk.RIGHT, anchor="se", padx=10, pady=5)
 
-    def refresh_student_list(self):
+    def refresh_teacher_list(self):
        # Xóa hết nội dung hiện tại
         for item in self.tree.get_children():
             self.tree.delete(item)
         i=1
         try:
-            students = TeacherDAO.get_all()
-            for stu in students: 
+            teachers = TeacherDAO.get_all()
+            for teacher in teachers:
+                #Lấy tên khoa từ ID khoa
+                department_of_teacher = DepartmentDAO.get_by_id(teacher.department_id)
+                departmentName_of_teacher = getattr(department_of_teacher, "name", "Không có dữ liệu")
+            
                 self.tree.insert("", "end", values=(
                     i,
-                    stu.id,
-                    stu.fullname,
-                    stu.gender,
-                    stu.address,
-                    stu.email,
-                    stu.phone,
-                    stu.department_id,
-                    stu.status,  # Trạng thái sinh viên
+                    teacher.id,
+                    teacher.fullname,
+                    teacher.gender,
+                    teacher.address,
+                    teacher.email,
+                    teacher.phone,
+                    departmentName_of_teacher,
+                    teacher.status,
                 ))
                 i+=1
         except Exception as e:
             print(f"Error: {e}")
             messagebox.showerror("Error", str(e))   
     
-    def add_student(self):
+    def add_teacher(self):
         add_window = AddTeacherGUI(self)  # Mở cửa sổ thêm sinh viên
         add_window.grab_set()
 
-    def delete_student(self):
+    def delete_teacher(self):
         selected_item = self.tree.selection()
         if selected_item:
-            student_id = self.tree.item(selected_item[0])["values"][1]
-            name_student = self.tree.item(selected_item[0])["values"][2]
+            teacher_id = self.tree.item(selected_item[0])["values"][1]
+            name_teacher = self.tree.item(selected_item[0])["values"][2]
 
-            confirm = messagebox.askyesno("Xác nhận xóa", f"Bạn có chắc chắn muốn xóa sinh viên tên {name_student} không?")
+            confirm = messagebox.askyesno("Xác nhận xóa", f"Bạn có chắc chắn muốn xóa giảng viên tên {name_teacher} không?")
             if confirm:
                 try:
-                    StudentDAO.delete(student_id)
-                    self.refresh_student_list()
+                    TeacherDAO.delete(teacher_id)
+                    self.refresh_teacher_list()
                     messagebox.showinfo("Thông báo", "Xóa thành công.")
                 except Exception as e:
                     print(f"Error: {e}")
@@ -183,35 +184,35 @@ class Student_List(tk.Tk):
         else:
             messagebox.showinfo("Thông báo", "Vui lòng chọn sinh viên để xóa.")
 
-    def show_details_student(self, event=None, edit_mode=False):
+    def show_details_teacher(self, event=None, edit_mode=False):
         selected_item = self.tree.selection()
         if not selected_item:
             return
 
-        student_id = self.tree.item(selected_item[0])["values"][1]
-        student_details = TeacherDAO.get_by_id(student_id)
+        teacher_id = self.tree.item(selected_item[0])["values"][1]
+        teacher_details = TeacherDAO.get_by_id(teacher_id)
 
         detail_window = tk.Toplevel(self)
-        detail_window.title(f"Thông Tin Chi Tiết - {student_details.fullname}")
+        detail_window.title(f"Thông Tin Chi Tiết - {teacher_details.fullname}")
         detail_window.geometry("500x400")
 
         detail_window.columnconfigure(0, weight=1)
         detail_window.columnconfigure(1, weight=1)
 
-        department_of_student = DepartmentDAO.get_by_id(student_details.department_id)
-        department_name = getattr(department_of_student, "name", "Không có dữ liệu")
+        department_of_teacher = DepartmentDAO.get_by_id(teacher_details.department_id)
+        department_name = getattr(department_of_teacher, "name", "Không có dữ liệu")
 
-        class_of_student = ClassDAO.get_by_id(student_details.class_id)
-        class_name = getattr(class_of_student, "name", "Không có dữ liệu")
 
         labels = [
-            ("Mã SV:", student_details.id),
-            ("Họ và tên:", student_details.fullname),
-            ("Giới tính:", student_details.gender),
-            ("Lớp:", class_name),
+            ("Mã GV:", teacher_details.id),
+            ("Họ và tên:", teacher_details.fullname),
+            ("Giới tính:", teacher_details.gender),
+            ("Địa chỉ:", teacher_details.address),
+            ("Email:", teacher_details.email),
+            ("Số điện thoại:", teacher_details.phone),
             ("Khoa:", department_name),
-            ("Địa chỉ:", student_details.address),
-            ("Trạng thái:", student_details.status)
+            ("Tên đăng nhập:", teacher_details.username),
+            ("Trạng thái:", teacher_details.status)
         ]
 
         # Danh sách các nhãn và giá trị hiển thị
@@ -223,22 +224,19 @@ class Student_List(tk.Tk):
             self.value_labels.append(label_value)
 
         self.original_data = {
-            "id": student_details.id,
-            "fullname": student_details.fullname,
-            "dateOfBirth": student_details.dateOfBirth,
-            "gender": student_details.gender,
-            "class_id": student_details.class_id,
-            "departmentId": student_details.departmentId,
-            "address": student_details.address,
-            "ethnicity": student_details.ethnicity,
-            "religion": student_details.religion,
-            "nationality": student_details.nationality,
-            "academicYear": student_details.academicYear,
-            "status": student_details.status
+            "id": teacher_details.id,
+            "fullname": teacher_details.fullname,
+            "gender": teacher_details.gender,
+            "address": teacher_details.address,
+            "email": teacher_details.email,
+            "phone": teacher_details.phone,
+            "department_id": teacher_details.department_id,
+            "username": teacher_details.username,
+            "status": teacher_details.status
         }
 
          #HÌnh ảnh
-        img_path = "D:\\University\\Pyhon-T2\\python-t2\\dataset\\image_student\\Test_img.jpg"
+        img_path = "D:\\University\\Pyhon-T2\\python-t2\\dataset\\image_teacher\\Test_img.jpg"
 
         if os.path.exists(img_path):
             img = Image.open(img_path)
@@ -269,7 +267,7 @@ class Student_List(tk.Tk):
                 btnSua.config(text="Lưu", command=save_changes, bg="#4CAF50")  # Đổi thành nút "Lưu"
                 btnDong.config(text="Hủy", command=cancel_edit, bg="#f44336")  # Đổi thành nút "Hủy"
 
-                status_options = ["Đang học", "Bảo lưu", "Đình chỉ", "Tốt nghiệp", "Khác"]
+                status_options = ["Giảng dạy", "Tạm nghỉ", "Nghỉ hưu", "Tốt nghiệp", "Khác"]
 
                 # Chuyển label thành Entry để chỉnh sửa
                 for i, (label, value) in enumerate(labels):
@@ -279,7 +277,7 @@ class Student_List(tk.Tk):
                         combobox.grid(row=i, column=1, sticky="w", padx=8, pady=2)
                         self.value_labels[i].destroy()  # Xóa label cũ
                         self.value_labels[i] = combobox  # Thay thế bằng combobox
-                    elif label != "Mã SV:" and label != "Lớp:" and label != "Khoa:":  # Các trường khác dùng Entry
+                    elif label != "Mã GV:" and label != "Khoa:":  # Các trường khác dùng Entry
                         entry = tk.Entry(detail_window, font=("Arial", 10))
                         entry.insert(0, self.value_labels[i].cget("text"))
                         entry.grid(row=i, column=1, sticky="w", padx=8, pady=2)
@@ -318,16 +316,15 @@ class Student_List(tk.Tk):
                     for value in self.value_labels
                 ]
 
-                # Cập nhật dữ liệu vào đối tượng student_details
-                student_details.fullname = new_values[1]
-                student_details.dateOfBirth = new_values[2]
-                student_details.gender = new_values[3]
-                student_details.address = new_values[6]
-                student_details.ethnicity = new_values[7]
-                student_details.religion = new_values[8]
-                student_details.nationality = new_values[9]
-                student_details.academicYear = new_values[10]
-                student_details.status = new_values[11]
+                # Cập nhật dữ liệu vào đối tượng teacher_details
+                teacher_details.fullname = new_values[1]
+                teacher_details.gender = new_values[2]
+                teacher_details.address = new_values[3]
+                teacher_details.email = new_values[4]
+                teacher_details.phone = new_values[5]
+                teacher_details.username = new_values[6]
+                teacher_details.department_id = teacher_details.department_id  # Không thay đổi ID khoa
+                teacher_details.status = new_values[8]
 
                 # Kiểm tra giá trị trước khi cập nhật
                 if not all(new_values[1:]):  # Bỏ qua ID
@@ -335,7 +332,7 @@ class Student_List(tk.Tk):
                     return  # Ngừng hàm nếu dữ liệu không hợp lệ
 
                 # Cập nhật dữ liệu vào CSDL
-                StudentDAO.update(student_details)
+                TeacherDAO.update(teacher_details)
 
                 # Chuyển đổi Entry thành Label sau khi lưu
                 for i, (label, value) in enumerate(labels):
@@ -355,7 +352,7 @@ class Student_List(tk.Tk):
                 detail_window.lift()
                 detail_window.focus_force() 
 
-                self.refresh_student_list()
+                self.refresh_teacher_list()
             
             except Exception as e:
                 messagebox.showerror("Lỗi", f"Có lỗi xảy ra: {e}")
@@ -367,41 +364,53 @@ class Student_List(tk.Tk):
         # Gán sự kiện cho nút "Sửa"
         btnSua.config(command=switch_to_edit_mode)
 
-    def find_student(self):
+    def find_teacher(self):
         #Lấy giá trị từ Entry
-        id_student = self.entry_search_ID.get().strip()  # Xóa khoảng trắng
-        name_student = self.entry_search_Name.get().strip().lower()  # Chuyển thành chữ thường
+        id_teacher = self.entry_search_ID.get().strip()  # Xóa khoảng trắng
+        name_teacher = self.entry_search_Name.get().strip().lower()  # Chuyển thành chữ thường
 
-        if id_student or name_student:
+        if id_teacher or name_teacher:
             #Lấy danh sách sinh viên từ CSDL
-            list_student = StudentDAO.get_all()
+            list_teacher =TeacherDAO.get_all()
 
             #Tạo danh sách chứa kết quả tìm kiếm
-            filtered_students = []
+            filtered_teachers = []
 
-            for student in list_student:
-                student_id = str(student.id)  # Đảm bảo ID là chuỗi để so sánh
-                student_name = student.fullname.lower()  # Chuyển thành chữ thường
+            for teacher in list_teacher:
+                teacher_id = str(teacher.id)  # Đảm bảo ID là chuỗi để so sánh
+                teacher_name = teacher.fullname.lower()  # Chuyển thành chữ thường
 
                 #Kiểm tra điều kiện tìm kiếm
-                if id_student and id_student in student_id:  # Nếu tìm theo ID
-                    filtered_students.append(student)
-                elif name_student and name_student in student_name:  # Nếu tìm theo tên
-                    filtered_students.append(student)
+                if id_teacher and id_teacher in teacher_id:  # Nếu tìm theo ID
+                    filtered_teachers.append(teacher)
+                elif name_teacher and name_teacher in teacher_name:  # Nếu tìm theo tên
+                    filtered_teachers.append(teacher)
 
             #Xóa dữ liệu cũ trong TreeView
             for item in self.tree.get_children():
                 self.tree.delete(item)
 
             #Hiển thị kết quả tìm kiếm
-            for i, stu in enumerate(filtered_students, start=1):
-                self.tree.insert("", "end", values=(i, stu.id, stu.fullname, stu.dateOfBirth, stu.gender,stu.status,))
-
+            for i, teacher in enumerate(filtered_teachers, start=1):
+                department_of_teacher = DepartmentDAO.get_by_id(teacher.department_id)
+                departmentName_of_teacher = getattr(department_of_teacher, "name", "Không có dữ liệu")
+                self.tree.insert("", "end", values=(
+                    i,
+                    teacher.id,
+                    teacher.fullname,
+                    teacher.gender,
+                    teacher.address,
+                    teacher.email,
+                    teacher.phone,
+                    departmentName_of_teacher,
+                    teacher.status
+                ))
+            
             self.clear_filed()
 
-            print(f"🔎 Tìm thấy {len(filtered_students)} kết quả.")
+            print(f"🔎 Tìm thấy {len(filtered_teachers)} kết quả.")
         else:
-            self.refresh_student_list()
+            self.refresh_teacher_list()
 
     def treeview_sort_column(self, col, reverse):
         l = []
@@ -452,12 +461,12 @@ class Student_List(tk.Tk):
            
             print("1")
             
-            student=Student(id=2322332,fullname="hihi")
-            StudentDAO.save(student)
+            teacher=teacher(id=2322332,fullname="hihi")
+            TeacherDAO.save(teacher)
         
        
         
 
 if __name__ == '__main__':
-    app = Student_List()
+    app = Teacher_List()
     app.mainloop()
