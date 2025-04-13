@@ -70,13 +70,13 @@ class DepartmentGUI(tk.Tk):
         btn_add = tk.Button(frame_btns, text="Thêm", width=20, command=self.add_department)
         btn_add.pack(fill= tk.X, padx=10, pady=10)
 
-        btn_edit = tk.Button(frame_btns, text="Sửa")
+        btn_edit = tk.Button(frame_btns, text="Sửa", command = self.update_department)
         btn_edit.pack(fill=tk.X, padx=10, pady=10)
         
         btn_delete = tk.Button(frame_btns, text="Xóa", command= self.delete_department)
         btn_delete.pack(fill=tk.X, padx=10, pady=10)
 
-        btn_show_detail= tk.Button(frame_btns, text="Chi tiết")
+        btn_show_detail= tk.Button(frame_btns, text="Chi tiết", command=self.detail_department)
         btn_show_detail.pack(fill=tk.X, padx=10, pady=10)
 
 
@@ -132,7 +132,101 @@ class DepartmentGUI(tk.Tk):
                             bg="#4CAF50", fg="white", width=15, height=2, bd=0, command=self.save_department)
         add_button.pack(pady=20)
 
+    def update_department(self):
+        self.edit_window = tk.Toplevel(self)
+        self.edit_window.title("Sửa thông tin khoa")
+        self.edit_window.geometry("800x600")
+        self.edit_window.configure(bg="white")
+        self.edit_window.resizable(False, False)
 
+        title_label = tk.Label(self.edit_window, font=("Times New Roman", 25, "bold"),
+                            text="Cập nhật mới thông tin khoa", bg="white", fg="red")
+        title_label.place(x=200, y=30)
+
+        locationX = 30
+        locationEntry = 280
+        locationY = 100
+        backUpLocationY = 70
+
+        stt_label = tk.Label(self.edit_window, font=("Times New Roman", 17), text="STT:", bg="white", fg="black")
+        stt_label.place(x=locationX, y=locationY)
+        id_label = tk.Label(self.edit_window, font=("Times New Roman", 17), text="MÃ KHOA:", bg="white", fg="black")
+        id_label.place(x=locationX, y=locationY + backUpLocationY)
+        name_label = tk.Label(self.edit_window, font=("Times New Roman", 17), text="TÊN KHOA:", bg="white", fg="black")
+        name_label.place(x=locationX, y=locationY + 2 * backUpLocationY)
+        lead_label = tk.Label(self.edit_window, font=("Times New Roman", 17), text="TRƯỞNG KHOA:", bg="white", fg="black")
+        lead_label.place(x=locationX, y=locationY + 3 * backUpLocationY)
+        student_label = tk.Label(self.edit_window, font=("Times New Roman", 17), text="SỐ LƯỢNG SINH VIÊN:", bg="white", fg="black")
+        student_label.place(x=locationX, y=locationY + 4 * backUpLocationY)
+
+        self.textSTTDepartment = tk.Entry(self.edit_window, font=("Times New Roman", 17), fg="black", width=30, borderwidth=1)
+        self.textSTTDepartment.place(x=locationEntry, y=locationY)
+        self.textIDDepartment = tk.Entry(self.edit_window, font=("Times New Roman", 17), fg="black", width=30, borderwidth=1)
+        self.textIDDepartment.place(x=locationEntry, y=locationY + backUpLocationY)
+        self.textNameDepartment = tk.Entry(self.edit_window, font=("Times New Roman", 17), fg="black", width=30, borderwidth=1)
+        self.textNameDepartment.place(x=locationEntry, y=locationY + 2 * backUpLocationY)
+        self.textLeadDepartment = tk.Entry(self.edit_window, font=("Times New Roman", 17), fg="black", width=30, borderwidth=1)
+        self.textLeadDepartment.place(x=locationEntry, y=locationY + 3 * backUpLocationY)
+        self.textStudentDepartment = tk.Entry(self.edit_window, font=("Times New Roman", 17), fg="black", width=30, borderwidth=1)
+        self.textStudentDepartment.place(x=locationEntry, y=locationY + 4 * backUpLocationY)
+
+        buttonUpdate = tk.Button(self.edit_window, text="Cập nhật", font=("Times New Roman", 18, "bold"),
+                                bg="black", fg="white", width=15, height=2, bd=0)
+        buttonUpdate.place(x=300, y=locationY + 5 * backUpLocationY + 20)
+
+            # Sự kiện hover vào button
+        buttonUpdate.bind("<Enter>", lambda e:buttonUpdate.config(bg="red", fg="white"))
+
+            # Sự kiện rời khỏi button
+        buttonUpdate.bind("<Leave>", lambda e:buttonUpdate.config(bg="black", fg="white"))
+
+    def detail_department(self):
+        self.edit_window = tk.Toplevel(self)
+        self.edit_window.title("Sửa thông tin khoa")
+        self.edit_window.geometry("800x600")
+        self.edit_window.configure(bg="white")
+        self.edit_window.resizable(False, False)
+
+        title_label = tk.Label(self.edit_window, font=("Times New Roman", 25, "bold"),
+                            text="Chi tiết thông tin khoa", bg="white", fg="red")
+        title_label.place(x=200, y=30)
+
+        locationX = 30
+        locationEntry = 280
+        locationY = 100
+        backUpLocationY = 70
+
+        stt_label = tk.Label(self.edit_window, font=("Times New Roman", 17), text="STT:", bg="white", fg="black")
+        stt_label.place(x=locationX, y=locationY)
+        id_label = tk.Label(self.edit_window, font=("Times New Roman", 17), text="MÃ KHOA:", bg="white", fg="black")
+        id_label.place(x=locationX, y=locationY + backUpLocationY)
+        name_label = tk.Label(self.edit_window, font=("Times New Roman", 17), text="TÊN KHOA:", bg="white", fg="black")
+        name_label.place(x=locationX, y=locationY + 2 * backUpLocationY)
+        lead_label = tk.Label(self.edit_window, font=("Times New Roman", 17), text="TRƯỞNG KHOA:", bg="white", fg="black")
+        lead_label.place(x=locationX, y=locationY + 3 * backUpLocationY)
+        student_label = tk.Label(self.edit_window, font=("Times New Roman", 17), text="SỐ LƯỢNG SINH VIÊN:", bg="white", fg="black")
+        student_label.place(x=locationX, y=locationY + 4 * backUpLocationY)
+
+        self.textSTTDepartment = tk.Entry(self.edit_window, font=("Times New Roman", 17), fg="black", width=30, borderwidth=1,state="readonly")
+        self.textSTTDepartment.place(x=locationEntry, y=locationY)
+        self.textIDDepartment = tk.Entry(self.edit_window, font=("Times New Roman", 17), fg="black", width=30, borderwidth=1,state="readonly")
+        self.textIDDepartment.place(x=locationEntry, y=locationY + backUpLocationY)
+        self.textNameDepartment = tk.Entry(self.edit_window, font=("Times New Roman", 17), fg="black", width=30, borderwidth=1,state="readonly")
+        self.textNameDepartment.place(x=locationEntry, y=locationY + 2 * backUpLocationY)
+        self.textLeadDepartment = tk.Entry(self.edit_window, font=("Times New Roman", 17), fg="black", width=30, borderwidth=1,state="readonly")
+        self.textLeadDepartment.place(x=locationEntry, y=locationY + 3 * backUpLocationY)
+        self.textStudentDepartment = tk.Entry(self.edit_window, font=("Times New Roman", 17), fg="black", width=30, borderwidth=1,state="readonly")
+        self.textStudentDepartment.place(x=locationEntry, y=locationY + 4 * backUpLocationY)
+
+        buttonUpdate = tk.Button(self.edit_window, text="Cập nhật thông tin mới cho khoa", font=("Times New Roman", 18, "bold"),
+                                bg="black", fg="white", width=30, height=2, bd=0, command = self.update_department)
+        buttonUpdate.place(x=200, y=locationY + 5 * backUpLocationY + 20)
+
+            # Sự kiện hover vào button
+        buttonUpdate.bind("<Enter>", lambda e:buttonUpdate.config(bg="red", fg="white"))
+
+            # Sự kiện rời khỏi button
+        buttonUpdate.bind("<Leave>", lambda e:buttonUpdate.config(bg="black", fg="white"))
 
     def generate_unique_id(self):
         return int(uuid.uuid4().int % (2**29))
