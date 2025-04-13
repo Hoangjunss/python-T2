@@ -40,7 +40,7 @@ def get_by_id(teacher_id: int) -> Teacher:
 def get_all() -> list[Teacher]:
     db = Database()
     query = "SELECT * FROM teacher"
-    result = db.exec_query(query)
+    result = db.fetch_all(query)
     teachers = []
     for row in result:
         teachers.append(Teacher(*row))

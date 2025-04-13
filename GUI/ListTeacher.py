@@ -7,8 +7,8 @@ import cv2,os
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from dao import ClassDAO, DepartmentDAO, StudentDAO
-from gui.UI import AddStudentGUI
+from dao import ClassDAO, DepartmentDAO, StudentDAO,TeacherDAO
+from gui.UI import AddStudentGUI ,AddTeacherGUI
 from dao.TestDAO import TestDAO
 from models.Students import Student
 # from models.Students import Student
@@ -17,19 +17,19 @@ from models.Students import Student
 class Student_List(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.gui_DSSV()
+        self.gui_DSGV()
         self.refresh_student_list() 
         self.mainloop()
 
-    def gui_DSSV(self):
-        self.title('Phần Mềm Điểm Danh Sinh Viên Bằng Nhận Diện Khuôn Mặt')
-        self.geometry('850x650')
+    def gui_DSGV(self):
+        self.title('Phần Mềm Quản Lý Giáo Viên')
+        self.geometry('1000x750')
 
         # Phần trên (tiêu đề và tìm kiếm)
         frame_top = tk.Frame(self)
         frame_top.pack(fill=tk.X, padx=10, pady=10)
 
-        label_title = tk.Label(frame_top, text="Quản Lý Sinh Viên", font=("Arial", 14, 'bold'))
+        label_title = tk.Label(frame_top, text="Quản Lý Giáo Viên", font=("Arial", 14, 'bold'))
         label_title.pack(anchor="w")
 
         frame_search = tk.Frame(frame_top)
@@ -38,7 +38,7 @@ class Student_List(tk.Tk):
         label_search = tk.Label(frame_search, text="Thông tin tìm kiếm:", font=("Arial", 8, "bold"))
         label_search.pack(side= tk.LEFT)
 
-        label_search_ID = tk.Label(frame_search, text="ID (MASV):", font=("Arial", 7))
+        label_search_ID = tk.Label(frame_search, text="ID (MAGV):", font=("Arial", 7))
         label_search_ID.pack(side= tk.LEFT, padx= 3)
 
         self.entry_search_ID = tk.Entry(frame_search, width=15)
@@ -64,19 +64,36 @@ class Student_List(tk.Tk):
         frame_table = tk.Frame(frame_bottom)
         frame_table.pack(side=tk.LEFT, expand="true", fill=tk.BOTH, padx=5)
 
-        columns = ("STT", "ID", "Họ tên", "Ngày sinh", "Giới tính", "Trạng thái")
+        columns = ("stt", "id", "name", "gender", "address", "email", "phone", "faculty", "status")
         self.tree = ttk.Treeview(frame_table, columns=columns, show="headings")
 
+        column_labels = {
+            "stt": "STT",
+            "id": "ID",
+            "name": "Họ tên",
+            "gender": "Giới Tính",
+            "address": "Địa chỉ",
+            "email": "Email",
+            "phone": "Số điện thoại",
+            "faculty": "Khoa",
+            "status": "Trạng thái"
+        }
+
         for col in columns:
-            self.tree.heading(col, text=col, command=lambda _col=col: self.treeview_sort_column(_col, False))
+            self.tree.heading(col, text=column_labels[col], command=lambda _col=col: self.treeview_sort_column(_col, False))
             self.tree.column(col, anchor="center")
 
-        self.tree.column("STT", width=30)
-        self.tree.column("ID", width=80)
-        self.tree.column("Họ tên", width=200)
-        self.tree.column("Ngày sinh", width=120)
-        self.tree.column("Giới tính", width=80)
-        self.tree.column("Trạng thái", width=120)
+            # Đặt độ rộng
+            self.tree.column("stt", width=30)
+            self.tree.column("id", width=60)
+            self.tree.column("name", width=100)
+            self.tree.column("gender", width=70)
+            self.tree.column("address", width=120)
+            self.tree.column("email", width=100)
+            self.tree.column("phone", width=100)
+            self.tree.column("faculty", width=100)
+            self.tree.column("status", width=80)
+
 
         # Gán tree vào thuộc tính của class để có thể sử dụng ở các phương thức khác
 
@@ -126,14 +143,17 @@ class Student_List(tk.Tk):
             self.tree.delete(item)
         i=1
         try:
-            students = StudentDAO.get_all()
+            students = TeacherDAO.get_all()
             for stu in students: 
                 self.tree.insert("", "end", values=(
                     i,
                     stu.id,
                     stu.fullname,
-                    stu.dateOfBirth,
                     stu.gender,
+                    stu.address,
+                    stu.email,
+                    stu.phone,
+                    stu.department_id,
                     stu.status,  # Trạng thái sinh viên
                 ))
                 i+=1
@@ -142,7 +162,7 @@ class Student_List(tk.Tk):
             messagebox.showerror("Error", str(e))   
     
     def add_student(self):
-        add_window = AddStudentGUI(self)  # Mở cửa sổ thêm sinh viên
+        add_window = AddTeacherGUI(self)  # Mở cửa sổ thêm sinh viên
         add_window.grab_set()
 
     def delete_student(self):
@@ -169,7 +189,7 @@ class Student_List(tk.Tk):
             return
 
         student_id = self.tree.item(selected_item[0])["values"][1]
-        student_details = StudentDAO.get_by_id(student_id)
+        student_details = TeacherDAO.get_by_id(student_id)
 
         detail_window = tk.Toplevel(self)
         detail_window.title(f"Thông Tin Chi Tiết - {student_details.fullname}")
@@ -178,7 +198,7 @@ class Student_List(tk.Tk):
         detail_window.columnconfigure(0, weight=1)
         detail_window.columnconfigure(1, weight=1)
 
-        department_of_student = DepartmentDAO.get_by_id(student_details.departmentId)
+        department_of_student = DepartmentDAO.get_by_id(student_details.department_id)
         department_name = getattr(department_of_student, "name", "Không có dữ liệu")
 
         class_of_student = ClassDAO.get_by_id(student_details.class_id)
@@ -187,15 +207,10 @@ class Student_List(tk.Tk):
         labels = [
             ("Mã SV:", student_details.id),
             ("Họ và tên:", student_details.fullname),
-            ("Ngày sinh:", student_details.dateOfBirth),
             ("Giới tính:", student_details.gender),
             ("Lớp:", class_name),
             ("Khoa:", department_name),
             ("Địa chỉ:", student_details.address),
-            ("Dân tộc:", student_details.ethnicity),
-            ("Tôn giáo:", student_details.religion),
-            ("Quốc tịch:", student_details.nationality),
-            ("Niên khóa:", student_details.academicYear),
             ("Trạng thái:", student_details.status)
         ]
 

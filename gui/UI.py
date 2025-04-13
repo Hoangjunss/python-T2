@@ -11,8 +11,9 @@ import numpy as np
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from dao import ClassDAO, DepartmentDAO, StudentDAO
+from dao import ClassDAO, DepartmentDAO, StudentDAO, TeacherDAO
 from models.Students import Student
+from models.Teacher import Teacher
 from models.Department import Department
 from models.Class import Class
 
@@ -404,4 +405,129 @@ class AddStudentGUI(tk.Toplevel):
         buttonFaceId.bind("<Enter>", self.on_mouse_enter)
         buttonFaceId.bind("<Leave>", self.on_mouse_leave)
 
+class AddTeacherGUI(tk.Toplevel):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.title("Thêm Giáo viên")
+        self.geometry("1200x600")
+        self.configure(bg="white")
+        self.create_widget()  # Gọi phương thức để hiển thị các widget
 
+
+    def fetch_all_department(self)-> list[Department]:
+        return DepartmentDAO.get_all()
+    
+    def fetch_all_class(self)-> list[Class]:
+        return ClassDAO.get_all()
+
+    def on_combobox_change(self, event):
+        selected_index = self.department_combobox.current()
+        if selected_index >= 0:
+            department = self.department_data[selected_index]
+            print(f"Bạn đã chọn: ID = {department.id}, Tên Khoa = {department.name}")
+
+            self.department_name =department.name
+
+    
+    def generate_unique_id(self):
+        return int(uuid.uuid4().int % (2**29))
+
+    def save_teacher(self):
+      
+        self.fullname = self.textName.get()
+
+        teacher = Teacher(
+            id=self.generate_unique_id(),
+            fullname=self.fullname,
+            gender=self.gender_combobox.get(),
+            status="true",  # giả sử bạn có combobox cho trạng thái
+            address=self.textAddress.get("1.0", "end-1c"),
+            email=self.textEmail.get(),
+            phone=self.textPhone.get(),
+            department_id=self.department_map.get(self.selected_department.get()),
+            username=self.textUsername.get()
+    )
+        print(teacher)
+        TeacherDAO.save(teacher)
+       
+
+    def addBorderButton(self, button):
+        button.update_idletasks()
+        button_width = button.winfo_width()
+        button_height = button.winfo_height()
+
+        border = tk.Canvas(button.master, height = 1, width = button_width, bg = "blue", bd = 0, highlightthickness = 0)
+        border.place(x = button.winfo_x(), y = button_height + button.winfo_y())
+
+    def on_button_click(self, entry):
+        entry.config(state = tk.NORMAL)
+
+    def create_widget(self):
+        frame = tk.Frame(self, bg="white")
+        frame.place(x=0, y=0, width=1200, height=600)
+
+        titleAdd = tk.Label(frame, text="Quản lý thêm giáo viên", font=("Times New Roman", 25), bg="white")
+        titleAdd.place(x=340, y=5)
+
+        labelName = tk.Label(frame, text="Họ tên giáo viên:", font=("Times New Roman", 20), bg="white")
+        labelName.place(x=15, y=60)
+
+        labelGender = tk.Label(frame, text="Giới tính:", font=("Times New Roman", 20), bg="white")
+        labelGender.place(x=15, y=100)
+
+        labelStatus = tk.Label(frame, text="Tình trạng:", font=("Times New Roman", 20), bg="white")
+        labelStatus.place(x=15, y=140)
+
+        labelAddress = tk.Label(frame, text="Địa chỉ:", font=("Times New Roman", 20), bg="white")
+        labelAddress.place(x=15, y=180)
+
+        labelEmail = tk.Label(frame, text="Email:", font=("Times New Roman", 20), bg="white")
+        labelEmail.place(x=15, y=260)
+
+        labelPhone = tk.Label(frame, text="Số điện thoại:", font=("Times New Roman", 20), bg="white")
+        labelPhone.place(x=15, y=300)
+
+        labelDepartment = tk.Label(frame, text="Khoa:", font=("Times New Roman", 20), bg="white")
+        labelDepartment.place(x=15, y=340)
+
+        labelUsername = tk.Label(frame, text="Tên đăng nhập:", font=("Times New Roman", 20), bg="white")
+        labelUsername.place(x=15, y=380)
+
+        # Các ô nhập
+        self.textName = tk.Entry(frame, font=("Times New Roman", 20), width=30, bg="white")
+        self.textName.place(x=250, y=60)
+
+        self.gender_combobox = ttk.Combobox(frame, state="readonly", width=30)
+        self.gender_combobox['values'] = ["Nam", "Nữ"]
+        self.gender_combobox.place(x=250, y=100)
+
+        self.textStatus = tk.Entry(frame, font=("Times New Roman", 20), width=30, bg="white")
+        self.textStatus.place(x=250, y=140)
+
+        self.textAddress = tk.Text(frame, font=("Times New Roman", 20), width=30, height=2, bg="white")
+        self.textAddress.place(x=250, y=180)
+
+        self.textEmail = tk.Entry(frame, font=("Times New Roman", 20), width=30, bg="white")
+        self.textEmail.place(x=250, y=260)
+
+        self.textPhone = tk.Entry(frame, font=("Times New Roman", 20), width=30, bg="white")
+        self.textPhone.place(x=250, y=300)
+
+        self.department_data = self.fetch_all_department()
+        self.selected_department = tk.StringVar()
+        self.department_combobox = ttk.Combobox(frame, textvariable=self.selected_department, state="readonly", width=30)
+        self.department_map = {d.name: d.id for d in self.department_data}
+        self.department_combobox['values'] = list(self.department_map.keys())
+        if self.department_data:
+            self.selected_department.set(self.department_data[0].name)
+        self.department_combobox.place(x=250, y=340)
+
+        self.textUsername = tk.Entry(frame, font=("Times New Roman", 20), width=30, bg="white")
+        self.textUsername.place(x=250, y=380)
+
+        # Nút thêm giáo viên
+        buttonAdd = tk.Button(frame, text="Thêm giáo viên", font=("Times New Roman", 15), width=15, height=2, bd=0,
+                            bg="white", fg="red", command=self.save_teacher)
+        buttonAdd.place(x=800, y=500)
+        buttonAdd.bind("<Enter>", self.on_mouse_enter)
+        buttonAdd.bind("<Leave>", self.on_mouse_leave)
