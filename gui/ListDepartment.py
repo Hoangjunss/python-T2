@@ -1,9 +1,11 @@
 import tkinter as tk
 from tkinter import ttk
+from tkinter import messagebox
 from models.Department import Department
 from models.Semester import Semester
 from models.Teacher import Teacher
 from dao import DepartmentDAO, TeacherDAO, SemesterDAO
+from gui.ListSchedule import ScheduleViewer
 
 class ScheduleManager:
     def __init__(self, root):
@@ -84,8 +86,9 @@ class ScheduleManager:
         self.populate_data(self.department_data[0].id)
 
         # Buttons
-        tk.Button(self.frame, text="Thêm lịch học", font=("Times New Roman", 17), bd=0, bg="red", fg="white", width=15, command=self.add_schedule).place(x=1200, y=130)
-        tk.Button(self.frame, text="Xóa lịch học", font=("Times New Roman", 17), bd=0, bg="red", fg="white", width=15, command=self.erase_schedule).place(x=1200, y=200)
+        tk.Button(self.frame, text="Xem lịch học", font=("Times New Roman", 17), bd=0, bg="red", fg="white", width=15, command=self.view_schedule).place(x=1200, y=130)
+        tk.Button(self.frame, text="Thêm lịch học", font=("Times New Roman", 17), bd=0, bg="red", fg="white", width=15, command=self.add_schedule).place(x=1200, y=200)
+        tk.Button(self.frame, text="Xóa lịch học", font=("Times New Roman", 17), bd=0, bg="red", fg="white", width=15, command=self.erase_schedule).place(x=1200, y=270)
 
 
 
@@ -95,6 +98,28 @@ class ScheduleManager:
         for semester in list_semester:
             self.list.insert("", "end", text=semester.id, values=(semester.name, semester.startdate, semester.enddate))
         
+
+    def view_schedule(self):
+        print("Xem Lịch học")
+        
+        selected_items = self.list.selection()
+        if selected_items:
+            selected_item = selected_items[0]
+
+            semester_id = self.list.item(selected_item, "text")
+            values = self.list.item(selected_item, "values")
+
+            selected_index = self.department_combobox.current()
+            if selected_index >= 0:
+                department = self.department_data[selected_index]
+                departmentID = department.id
+                self.viewer = ScheduleViewer(self.frame, departmentID, semester_id)
+            else:
+                messagebox.showwarning("Cảnh báo", "Vui lòng chọn khoa hợp lệ.")
+        else:
+            messagebox.showwarning("Cảnh báo", "Vui lòng chọn dòng trong bảng.")
+
+
 
     def add_schedule(self):
         print("Thêm lịch học")
