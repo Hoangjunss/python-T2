@@ -2,6 +2,7 @@ import os
 import sys
 import tkinter as tk
 from tkinter import ttk, messagebox
+import uuid
 
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
@@ -106,9 +107,53 @@ class DepartmentGUI(tk.Tk):
             messagebox.showerror("Error", str(e))   
 
     def add_department(self):
-        detail_window = tk.Toplevel(self)
-        detail_window.title("Thông Tin Chi Tiết")
-        detail_window.geometry("300x250")
+        self.detail_window = tk.Toplevel(self)
+        self.detail_window.title("Thêm khoa mới")
+        self.detail_window.geometry("400x250")
+        self.detail_window.configure(bg="white")
+        self.detail_window.resizable(False, False)
+
+        # Tiêu đề
+        title_label = tk.Label(self.detail_window, text="Thêm khoa", font=("Times New Roman", 22, "bold"), bg="white", fg="red")
+        title_label.pack(pady=20)
+
+        # Label + Entry: Tên khoa
+        name_frame = tk.Frame(self.detail_window, bg="white")
+        name_frame.pack(pady=10)
+
+        name_label = tk.Label(name_frame, text="Tên khoa:", font=("Times New Roman", 18), bg="white")
+        name_label.pack(side="left", padx=10)
+
+        self.department_name_entry = tk.Entry(name_frame, font=("Times New Roman", 18), width=20)
+        self.department_name_entry.pack(side="left")
+
+        # Nút "Thêm"
+        add_button = tk.Button(self.detail_window, text="Thêm khoa", font=("Times New Roman", 16, "bold"),
+                            bg="#4CAF50", fg="white", width=15, height=2, bd=0, command=self.save_department)
+        add_button.pack(pady=20)
+
+
+
+    def generate_unique_id(self):
+        return int(uuid.uuid4().int % (2**29))
+    
+    def save_department(self):
+        department_name = self.department_name_entry.get().strip()
+
+        if not department_name:
+            messagebox.showwarning("Thiếu thông tin", "Vui lòng nhập tên khoa.")
+            return
+
+        department = Department(
+            id=self.generate_unique_id(),  # hoặc để None nếu để DB tự sinh
+            name=department_name
+        )
+
+        print(department)
+        DepartmentDAO.save(department)
+
+        messagebox.showinfo("Thành công", f"Đã thêm khoa: {department_name}")
+        self.detail_window.destroy()
 
     def delete_department(self):
         selected_item = self.tree.selection()
