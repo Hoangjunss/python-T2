@@ -39,8 +39,8 @@ def get_all() -> list[Department]:
 @staticmethod
 def get_by_id(department_id: int) -> Department:
     db = Database()
-    query = f"SELECT * FROM department WHERE id = {department_id}"
-    result = db.fetch_one(query)
+    query = "SELECT * FROM department WHERE id = %s"
+    result = db.fetch_one(query, (department_id,))
     if result:
         db.close()
         return Department(*result)

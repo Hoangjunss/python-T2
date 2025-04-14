@@ -248,6 +248,7 @@ class DepartmentGUI(tk.Tk):
 
         messagebox.showinfo("Thành công", f"Đã thêm khoa: {department_name}")
         self.detail_window.destroy()
+        self.refresh_department_list()
 
     def delete_department(self):
         selected_item = self.tree.selection()
