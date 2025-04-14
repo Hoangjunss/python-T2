@@ -143,7 +143,15 @@ class Student_List(tk.Tk):
     
     def add_student(self):
         add_window = AddStudentGUI(self)  # Mở cửa sổ thêm sinh viên
+    
+        def on_close():
+            self.refresh_student_list()  # Cập nhật danh sách sinh viên
+            add_window.destroy()  # Đóng cửa sổ
+    
+        add_window.protocol("WM_DELETE_WINDOW", on_close)  # Gán sự kiện đóng cửa sổ
         add_window.grab_set()
+        self.wait_window(add_window)
+        # Cập nhật danh sách sinh viên sau khi thêm
 
     def delete_student(self):
         selected_item = self.tree.selection()

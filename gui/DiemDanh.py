@@ -150,11 +150,11 @@ class DiemDanh(tk.Tk):
                 break
             
         cam.release()
-        attendances=Attendances(id=1123, class_id=student.class_id, student_id=student.id, status="Điểm danh thành công", checkin_time=formatted_time, scheduledetail_id= 4)
+        attendances=Attendances(id=546123, class_id=student.class_id, student_id=student.id, status="Điểm danh thành công", checkin_time=formatted_time, scheduledetail_id= 4)
         AttendancesDAO.save(attendances=attendances)
         cv2.destroyAllWindows()
         self.refresh_list()
-        
+          
 if __name__ == '__main__':
     app = DiemDanh()
     app.mainloop()
