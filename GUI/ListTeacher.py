@@ -52,6 +52,8 @@ class Teacher_List(tk.Tk):
 
         btn_search = tk.Button(frame_search, text="Tìm Kiếm", width=15, command=self.find_teacher)
         btn_search.pack(side=tk.RIGHT, padx=5)
+        btn_refesh = tk.Button(frame_search, text="load", width=15, command=self.refresh_teacher_list)
+        btn_refesh.pack(side=tk.RIGHT, padx=5)
 
         #Phần dưới (bảng và các nút)
         frame_bottom = tk.Frame(self)
@@ -141,9 +143,11 @@ class Teacher_List(tk.Tk):
         i=1
         try:
             teachers = TeacherDAO.get_all()
+            print(teachers.__str__)
             for teacher in teachers:
                 #Lấy tên khoa từ ID khoa
                 department_of_teacher = DepartmentDAO.get_by_id(teacher.department_id)
+                print(department_of_teacher)
                 departmentName_of_teacher = getattr(department_of_teacher, "name", "Không có dữ liệu")
             
                 self.tree.insert("", "end", values=(
@@ -165,6 +169,8 @@ class Teacher_List(tk.Tk):
     def add_teacher(self):
         add_window = AddTeacherGUI(self)  # Mở cửa sổ thêm sinh viên
         add_window.grab_set()
+        self.wait_window(add_window)
+        self.refresh_teacher_list()  # Cập nhật danh sách sinh viên sau khi thêm
 
     def delete_teacher(self):
         selected_item = self.tree.selection()

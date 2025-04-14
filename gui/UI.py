@@ -449,6 +449,7 @@ class AddTeacherGUI(tk.Toplevel):
     )
         print(teacher)
         TeacherDAO.save(teacher)
+        self.destroy()
        
 
     def addBorderButton(self, button):
