@@ -52,7 +52,7 @@ class AddStudentGUI(tk.Toplevel):
         self.fullname = self.textName.get()
 
         student = Student(
-            id= self.id,
+            id= self.generate_unique_id(),
             fullname=self.fullname,
             gender=self.gender_combobox.get(),
             # dateOfBirth=self.textBirth.get(),

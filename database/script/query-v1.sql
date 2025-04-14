@@ -3,3 +3,4 @@ USE student_information_management;
 
 SELECT * FROM department dp INNER JOIN schedule sh ON dp.id = sh.`departmentID`
         INNER JOIN semester ss on ss.id = sh.`semesterID`
+        
