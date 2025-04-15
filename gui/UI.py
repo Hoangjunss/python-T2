@@ -447,9 +447,7 @@ class AddTeacherGUI(tk.Toplevel):
             department_id=self.department_map.get(self.selected_department.get()),
             username=self.textUsername.get()
     )
-        print(teacher)
         TeacherDAO.save(teacher)
-        self.destroy()
        
 
     def addBorderButton(self, button):
@@ -462,6 +460,14 @@ class AddTeacherGUI(tk.Toplevel):
 
     def on_button_click(self, entry):
         entry.config(state = tk.NORMAL)
+
+    def on_mouse_enter(self, event):
+        event.widget.config(bg = "red")
+        event.widget.config(fg = "white")
+    def on_mouse_leave(self, event):
+        event.widget.config(bg ="white")
+        event.widget.config(fg = "red")
+
 
     def create_widget(self):
         frame = tk.Frame(self, bg="white")

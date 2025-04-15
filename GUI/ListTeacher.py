@@ -167,10 +167,17 @@ class Teacher_List(tk.Tk):
             messagebox.showerror("Error", str(e))   
     
     def add_teacher(self):
-        add_window = AddTeacherGUI(self)  # Mở cửa sổ thêm sinh viên
-        add_window.grab_set()
-        self.wait_window(add_window)
-        self.refresh_teacher_list()  # Cập nhật danh sách sinh viên sau khi thêm
+        add_window = AddTeacherGUI(self)  # Mở cửa sổ thêm giảng viên
+    
+        def on_close():
+            print('onclose')
+            self.refresh_teacher_list()  # Cập nhật danh sách giảng viên sau khi thêm
+            add_window.destroy()  # Đóng cửa sổ
+    
+        add_window.protocol("WM_DELETE_WINDOW", on_close)  # Gán sự kiện đóng cửa sổ
+        add_window.grab_set()  # Đảm bảo cửa sổ là modal
+        self.wait_window(add_window)  # Chờ cửa sổ đóng danh sách giảng viên sau khi thêm
+
 
     def delete_teacher(self):
         selected_item = self.tree.selection()
