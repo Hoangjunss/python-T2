@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
+from gui.DepartmentScheduleFrame import DepartmentScheduleFrame
 from models.Department import Department
 from models.Semester import Semester
 from models.Teacher import Teacher
@@ -102,22 +103,23 @@ class ScheduleManager:
     def view_schedule(self):
         print("Xem Lịch học")
         
-        selected_items = self.list.selection()
-        if selected_items:
-            selected_item = selected_items[0]
+        # selected_items = self.list.selection()
+        # if selected_items:
+        #     selected_item = selected_items[0]
 
-            semester_id = self.list.item(selected_item, "text")
-            values = self.list.item(selected_item, "values")
+        #     semester_id = self.list.item(selected_item, "text")
+        #     values = self.list.item(selected_item, "values")
 
-            selected_index = self.department_combobox.current()
-            if selected_index >= 0:
-                department = self.department_data[selected_index]
-                departmentID = department.id
-                self.viewer = ScheduleViewer(self.frame, departmentID, semester_id)
-            else:
-                messagebox.showwarning("Cảnh báo", "Vui lòng chọn khoa hợp lệ.")
-        else:
-            messagebox.showwarning("Cảnh báo", "Vui lòng chọn dòng trong bảng.")
+        #     selected_index = self.department_combobox.current()
+        #     if selected_index >= 0:
+        #         department = self.department_data[selected_index]
+        #         departmentID = department.id
+        #         self.viewer = ScheduleViewer(self.frame, departmentID, semester_id)
+        #     else:
+        #         messagebox.showwarning("Cảnh báo", "Vui lòng chọn khoa hợp lệ.")
+        # else:
+        #     messagebox.showwarning("Cảnh báo", "Vui lòng chọn dòng trong bảng.")
+        self.viewer = DepartmentScheduleFrame(self.frame, 1)
 
 
 

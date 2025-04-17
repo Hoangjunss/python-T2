@@ -60,6 +60,11 @@ def save_faces(img, candidates, save_dir):
 
 def detect_faces_in_folder(image_folder, output_folder):
     """ Phát hiện khuôn mặt trong tất cả các ảnh trong folder """
+    if not os.path.exists(image_folder):
+        os.makedirs(image_folder)
+
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
     for user_id in os.listdir(image_folder):
         user_folder = os.path.join(image_folder, user_id)
         
