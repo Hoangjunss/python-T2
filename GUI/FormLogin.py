@@ -1,104 +1,95 @@
-import tkinter as tk 
+import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
-# from PIL import ImageResampling 
-window= tk.Tk()
 
-screen_width = window.winfo_screenwidth()
-screen_height = window.winfo_screenheight()
+class FormLoginApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Welcome")
+        screen_width = root.winfo_screenwidth()
+        screen_height = root.winfo_screenheight()
+        root.geometry(f"{screen_width}x{screen_height}")
 
-window.title("Welcome")
-window.geometry(f"{screen_width}x{screen_height}")
+        self.frames = {}
+        self.create_frames(screen_width, screen_height)
+        self.show_frame("welcome")
 
-frame = tk.Frame(window, bg = "white")
-frame.place(x = 0, y = 0, width = screen_width, height = screen_height)
+    def create_frames(self, screen_width, screen_height):
+        # Frame: Trang chủ
+        self.frames["welcome"] = tk.Frame(self.root, bg="white")
+        self.frames["welcome"].place(x=0, y=0, width=screen_width, height=screen_height)
 
-frameTeacher = tk.Frame(window, bg = "white")
-frameTeacher.place(x = 0, y = 0, width = screen_width, height = screen_height)
+        # Frame: Giáo viên
+        self.frames["teacher"] = tk.Frame(self.root, bg="white")
+        self.frames["teacher"].place(x=0, y=0, width=screen_width, height=screen_height)
 
-frameStudent = tk.Frame(window, bg = "white")
-frameStudent.place(x = 0, y = 0, width = screen_width, height = screen_height)
+        # Frame: Sinh viên
+        self.frames["student"] = tk.Frame(self.root, bg="white")
+        self.frames["student"].place(x=0, y=0, width=screen_width, height=screen_height)
 
-imageFormWelcome = Image.open("D:\\Python\\python-T2\\Dataset\\image_form\\imgForm.jpg")
-imageFormWelcome = imageFormWelcome.resize((screen_width, screen_height), Image.Resampling.LANCZOS)
+        self.build_welcome_frame(screen_width, screen_height)
+        self.build_teacher_frame(screen_width, screen_height)
+        self.build_student_frame(screen_width, screen_height)
 
-imageBackground = ImageTk.PhotoImage(imageFormWelcome)
+    def show_frame(self, frame_name):
+        self.frames[frame_name].tkraise()
 
-imageForm = tk.Label(frame, image = imageBackground)
-imageForm.place(x = 0, y = 0, relwidth=1,relheight=1)
-imageForm.lower()
+    def build_welcome_frame(self, w, h):
+        frame = self.frames["welcome"]
 
-titleWelcome = tk.Label(frame, text = "Trường Đại học Sài Gòn", font = ("Times New Roman", 40), borderwidth=0, fg = "red")
-titleWelcome.place(x = 480, y = 200)
+        bg = Image.open(r"D:\University\Exercise\PYTHON\python-T2\dataset\image_form\imgForm.jpg")
+        bg = bg.resize((w, h), Image.Resampling.LANCZOS)
+        self.bg_welcome_img = ImageTk.PhotoImage(bg)
+        tk.Label(frame, image=self.bg_welcome_img).place(x=0, y=0, relwidth=1, relheight=1)
 
-buttonTeacher = tk.Button(frame, text = "Bạn là Giáo Viên", font = ("Times New Roman", 30),fg = "red", borderwidth=0, bd = "0",command=lambda: frameTeacher.tkraise())
-buttonTeacher.place(x = 330, y = 350)
+        tk.Label(frame, text="Trường Đại học Sài Gòn", font=("Times New Roman", 40), fg="red").place(x=480, y=200)
+        tk.Button(frame, text="Bạn là Giáo Viên", font=("Times New Roman", 30), fg="red", bd=0,
+                  command=lambda: self.show_frame("teacher")).place(x=330, y=350)
+        tk.Button(frame, text="Bạn là Sinh Viên", font=("Times New Roman", 30), fg="red", bd=0,
+                  command=lambda: self.show_frame("student")).place(x=900, y=350)
 
-buttonStudent = tk.Button(frame, font = ("Times New Roman", 30), text = "Bạn là Sinh Viên", fg = "red", borderwidth=0, bd = "0",command=lambda: frameStudent.tkraise())
-buttonStudent.place(x = 900, y = 350)
+    def build_teacher_frame(self, w, h):
+        frame = self.frames["teacher"]
 
-imageLoginTeacher = Image.open("D:\\Python\\python-T2\\Dataset\\image_form\\imgForm.jpg")
-imageLoginTeacher = imageLoginTeacher.resize((screen_width, screen_height), Image.Resampling.LANCZOS)
+        bg = Image.open(r"D:\University\Exercise\PYTHON\python-T2\dataset\image_form\imgForm.jpg")
+        bg = bg.resize((w, h), Image.Resampling.LANCZOS)
+        self.bg_teacher_img = ImageTk.PhotoImage(bg)
+        tk.Label(frame, image=self.bg_teacher_img).place(x=0, y=0, relwidth=1, relheight=1)
 
-imageBackgroundTeacher = ImageTk.PhotoImage(imageLoginTeacher)
+        tk.Label(frame, text="Chào mừng giáo viên Trường Đại học Sài Gòn", font=("Times New Roman", 40), fg="red").place(x=270, y=150)
+        tk.Label(frame, text="Đăng nhập", font=("Times New Roman", 30)).place(x=650, y=250)
+        tk.Label(frame, text="Tên đăng nhập: ", font=("Times New Roman", 27)).place(x=350, y=350)
+        tk.Label(frame, text="Mật khẩu: ", font=("Times New Roman", 27)).place(x=420, y=450)
 
-imageFormLoginTeacher = tk.Label(frameTeacher, image = imageBackgroundTeacher)
-imageFormLoginTeacher.place(x = 0, y = 0, relwidth=1,relheight=1)
-imageFormLoginTeacher.lower()
+        tk.Entry(frame, font=("Times New Roman", 25), width=30).place(x=600, y=350)
+        tk.Entry(frame, font=("Times New Roman", 25), width=30, show="*").place(x=600, y=450)
 
-titleWelcomeTeacher = tk.Label(frameTeacher, text = "Chào mừng giáo viên Trường Đại học Sài gòn", font = ("Times New Roman", 40), fg = "red")
-titleWelcomeTeacher.place(x = 270, y = 150)
+        tk.Button(frame, text="Truy cập", font=("Times New Roman", 25), fg="red", bd=0).place(x=670, y=530)
+        tk.Button(frame, text="Quay lại trang chủ", font=("Times New Roman", 20), bd=0,
+                  command=lambda: self.show_frame("welcome")).place(x=30, y=30)
 
-titleLoginTeacher = tk.Label(frameTeacher, text = "Đăng nhập", font = ("Times New Roman", 30), fg = "black")
-titleLoginTeacher.place(x = 650, y = 250)
+    def build_student_frame(self, w, h):
+        frame = self.frames["student"]
 
-usernameTeacher = tk.Label(frameTeacher, text = "Tên đăng nhập: ",font = ("Times New Roman", 27), fg = "black")
-passwordTeacher = tk.Label(frameTeacher, text = "Mật khẩu: ", font = ("Times New Roman", 27), fg = "black")
-textUsernameTeacher = tk.Entry(frameTeacher, font = ("Times New Roman", 25), fg = "black", width = 30, borderwidth = 1)
-textPasswordTeacher = tk.Entry(frameTeacher, font = ("Times New Roman", 25), fg = "black", width = 30, borderwidth = 1, show = "*")
+        bg = Image.open(r"D:\University\Exercise\PYTHON\python-T2\dataset\image_form\imgForm.jpg")
+        bg = bg.resize((w, h), Image.Resampling.LANCZOS)
+        self.bg_student_img = ImageTk.PhotoImage(bg)
+        tk.Label(frame, image=self.bg_student_img).place(x=0, y=0, relwidth=1, relheight=1)
 
-usernameTeacher.place(x = 350, y =350)
-passwordTeacher.place(x = 420, y = 450)
-textUsernameTeacher.place(x = 600, y = 350)
-textPasswordTeacher.place(x = 600, y = 450)
+        tk.Label(frame, text="Chào mừng sinh viên Trường Đại học Sài Gòn", font=("Times New Roman", 40), fg="red").place(x=270, y=150)
+        tk.Label(frame, text="Đăng nhập", font=("Times New Roman", 30)).place(x=650, y=250)
+        tk.Label(frame, text="Tên đăng nhập: ", font=("Times New Roman", 27)).place(x=350, y=350)
+        tk.Label(frame, text="Mật khẩu: ", font=("Times New Roman", 27)).place(x=420, y=450)
 
-buttonLoginTeacher = tk.Button(frameTeacher, text = "Truy cập", font = ("Times New Roman",25), fg = "red", bd = "0")
-buttonLoginTeacher.place(x = 670, y = 530)
+        tk.Entry(frame, font=("Times New Roman", 25), width=30).place(x=600, y=350)
+        tk.Entry(frame, font=("Times New Roman", 25), width=30, show="*").place(x=600, y=450)
 
-buttonBackHome = tk.Button(frameTeacher, text = "Quay lại trang chủ", font = ("Times New Roman", 20), fg = "black",bd = "0", command=lambda:frame.tkraise())
-buttonBackHome.place(x = 30, y = 30)
+        tk.Button(frame, text="Truy cập", font=("Times New Roman", 25), fg="red", bd=0).place(x=670, y=530)
+        tk.Button(frame, text="Quay lại trang chủ", font=("Times New Roman", 20), bd=0,
+                  command=lambda: self.show_frame("welcome")).place(x=30, y=30)
 
-imageLoginStudent = Image.open("D:\\Python\\python-T2\\Dataset\\image_form\\imgForm.jpg")
-imageLoginStudent = imageLoginStudent.resize((screen_width, screen_height), Image.Resampling.LANCZOS)
 
-imageBackgroundStudent = ImageTk.PhotoImage(imageLoginStudent)
-
-imageFormLoginStudent = tk.Label(frameStudent, image = imageBackgroundStudent)
-imageFormLoginStudent.place(x = 0, y = 0, relwidth=1,relheight=1)
-imageFormLoginStudent.lower()
-
-titleWelcomeStudent = tk.Label(frameStudent, text = "Chào mừng sinh viên Trường Đại học Sài gòn", font = ("Times New Roman", 40), fg = "red")
-titleWelcomeStudent.place(x = 270, y = 150)
-
-titleLoginStudent = tk.Label(frameStudent, text = "Đăng nhập", font = ("Times New Roman", 30), fg = "black")
-titleLoginStudent.place(x = 650, y = 250)
-
-usernameStudent = tk.Label(frameStudent, text = "Tên đăng nhập: ",font = ("Times New Roman", 27), fg = "black")
-passwordStudent = tk.Label(frameStudent, text = "Mật khẩu: ", font = ("Times New Roman", 27), fg = "black")
-textUsernameStudent = tk.Entry(frameStudent, font = ("Times New Roman", 25), fg = "black", width = 30, borderwidth = 1)
-textPasswordStudent = tk.Entry(frameStudent, font = ("Times New Roman", 25), fg = "black", width = 30, borderwidth = 1, show = "*")
-
-usernameStudent.place(x = 350, y =350)
-passwordStudent.place(x = 420, y = 450)
-textUsernameStudent.place(x = 600, y = 350)
-textPasswordStudent.place(x = 600, y = 450)
-
-buttonLoginStudent = tk.Button(frameStudent, text = "Truy cập", font = ("Times New Roman",25), fg = "red", bd = "0")
-buttonLoginStudent.place(x = 670, y = 530)
-
-buttonBackHome = tk.Button(frameStudent, text = "Quay lại trang chủ", font = ("Times New Roman", 20), fg = "black",bd = "0", command=lambda:frame.tkraise())
-buttonBackHome.place(x = 30, y = 30)
-
-frame.tkraise()
-window.mainloop()
-
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = FormLoginApp(root)
+    root.mainloop()

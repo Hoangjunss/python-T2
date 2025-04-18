@@ -30,11 +30,10 @@ def detect_face_from_webcam():
             # Cắt khuôn mặt ra để dự đoán
             face = frame[y:y+h, x:x+w]
             
-            # Dự đoán tên/ID từ khuôn mặt
-            user_id = predict_face(face)
-            
-            # Hiển thị tên và ID trên webcam
-            cv2.putText(frame, f"ID: {user_id}", (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (255, 0, 0), 2)
+            name, confidence = predict_face(face)
+            cv2.putText(frame, f"{name} ({confidence:.2f})", (x, y - 10),
+                cv2.FONT_HERSHEY_SIMPLEX, 0.9, (255, 0, 0), 2)
+
         
         # Hiển thị kết quả
         cv2.imshow('Webcam - Nhận diện khuôn mặt', frame)

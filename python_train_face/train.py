@@ -4,15 +4,19 @@ import numpy as np
 import tensorflow as tf
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
+from face_detection import detect_faces
 
 IMG_SIZE = 160  # Kích thước ảnh chuẩn
 FACES_DIR = "faces"  # Thư mục chứa các ảnh khuôn mặt của mỗi user
 
 # Tải dữ liệu từ thư mục chứa ảnh khuôn mặt
 def load_faces_data(faces_dir):
+    print("load_faces_data")
     X, y = [], []
     
     for user_id in os.listdir(faces_dir):
+        print("load_faces_data user_id: ", user_id)
+
         user_folder = os.path.join(faces_dir, user_id)
         
         if not os.path.isdir(user_folder):
@@ -20,6 +24,8 @@ def load_faces_data(faces_dir):
         
         # Lặp qua các ảnh trong thư mục của từng user
         for img_name in os.listdir(user_folder):
+            print("load_faces_data img_name: ", img_name)
+
             img_path = os.path.join(user_folder, img_name)
             img = cv2.imread(img_path)
             if img is None:
@@ -30,6 +36,8 @@ def load_faces_data(faces_dir):
             img = img / 255.0  # Chuẩn hóa ảnh (giảm giá trị từ 0-255 về 0-1)
             X.append(img)
             y.append(user_id)  # Gắn nhãn là user_id
+            print("load_faces_data X Y : ", X, y)
+
     
     return np.array(X), np.array(y)
 
