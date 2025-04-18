@@ -8,8 +8,8 @@ class Teacher:
                 email=None, 
                 phone=None, 
                 department_id=None,
-                username=None
-                
+                username=None,
+                password=None
                 ):
         self.id = id
         self.fullname = fullname
@@ -20,6 +20,8 @@ class Teacher:
         self.phone = phone
         self.department_id = department_id
         self.username = username
+        self.password = password
+        
 
         
 
@@ -27,4 +29,4 @@ class Teacher:
     def __str__(self):
         return (f"Teacher(id={self.id}, username='{self.username}', fullname='{self.fullname}', gender='{self.gender}', "
                 f"status='{self.status}', address='{self.address}', email='{self.email}', "
-                f"phone='{self.phone}', department_id='{self.department_id}')")
+                f"phone='{self.phone}', department_id='{self.department_id}', password='{self.password}')")
