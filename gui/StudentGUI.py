@@ -1,29 +1,27 @@
 import tkinter as tk
-from tkinter import Image, ttk, messagebox
+from tkinter import ttk, messagebox
 from PIL import Image, ImageTk
 import sys
 import os
 import cv2,os
 
+
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from dao import ClassDAO, DepartmentDAO, StudentDAO
+from dao import ClassDAO, DepartmentDAO, StudentDAO 
 from gui.UI import AddStudentGUI
-from dao.TestDAO import TestDAO
 from models.Students import Student
-# from models.Students import Student
 
 
-class Student_List(tk.Tk):
-    def __init__(self):
-        super().__init__()
+class Student_List(tk.Frame):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.parent = parent
         self.gui_DSSV()
         self.refresh_student_list() 
-        self.mainloop()
 
     def gui_DSSV(self):
-        self.title('Phần Mềm Điểm Danh Sinh Viên Bằng Nhận Diện Khuôn Mặt')
-        self.geometry('850x650')
 
         # Phần trên (tiêu đề và tìm kiếm)
         frame_top = tk.Frame(self)
@@ -50,11 +48,13 @@ class Student_List(tk.Tk):
         self.entry_search_Name = tk.Entry(frame_search, width=15)
         self.entry_search_Name.pack(side=tk.LEFT, padx= 3)
 
-     
-
-        
         btn_search = tk.Button(frame_search, text="Tìm Kiếm", width=15, command=self.find_student)
         btn_search.pack(side=tk.RIGHT, padx=5)
+
+        btn_refesh = tk.Button(frame_search, text="Refresh", width=15, command=self.refresh_student_list)
+        btn_refesh.pack(side=tk.RIGHT, padx=5)
+
+        
 
         #Phần dưới (bảng và các nút)
         frame_bottom = tk.Frame(self)
@@ -120,6 +120,9 @@ class Student_List(tk.Tk):
         btn_back = tk.Button(frame_footer, text="Trở về", width=15, command=self.destroy)# tạm thời khi nhấn sẽ tắt 
         btn_back.pack(side=tk.RIGHT, anchor="se", padx=10, pady=5)
 
+
+
+        
     def refresh_student_list(self):
        # Xóa hết nội dung hiện tại
         for item in self.tree.get_children():
@@ -230,7 +233,7 @@ class Student_List(tk.Tk):
         }
 
          #HÌnh ảnh
-        img_path = "D:\\University\\Pyhon-T2\\python-t2\\dataset\\image_student\\Test_img.jpg"
+        img_path = os.path.join(os.path.dirname(__file__), "..", "dataset", "image_student", "Test_img.jpg")
 
         if os.path.exists(img_path):
             img = Image.open(img_path)

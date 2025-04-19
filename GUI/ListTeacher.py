@@ -7,29 +7,25 @@ import cv2,os
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from dao import ClassDAO, DepartmentDAO, TeacherDAO
+from dao import DepartmentDAO, TeacherDAO
 from gui.UI import AddTeacherGUI
-from dao.TestDAO import TestDAO
 from models.Teacher import Teacher
-# from models.teachers import teacher
 
 
-class Teacher_List(tk.Tk):
-    def __init__(self):
-        super().__init__()
+class Teacher_List(tk.Frame):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.parent = parent
         self.gui_DSGV()
         self.refresh_teacher_list() 
-        self.mainloop()
 
     def gui_DSGV(self):
-        self.title('Quản Lý Giáo Viên')
-        self.geometry('1000x750')
 
         # Phần trên (tiêu đề và tìm kiếm)
         frame_top = tk.Frame(self)
         frame_top.pack(fill=tk.X, padx=10, pady=10)
 
-        label_title = tk.Label(frame_top, text="Quản Lý Giáo Viên", font=("Arial", 14, 'bold'))
+        label_title = tk.Label(frame_top, text="Quản Lý Giảng Viên", font=("Arial", 14, 'bold'))
         label_title.pack(anchor="w")
 
         frame_search = tk.Frame(frame_top)
@@ -52,7 +48,8 @@ class Teacher_List(tk.Tk):
 
         btn_search = tk.Button(frame_search, text="Tìm Kiếm", width=15, command=self.find_teacher)
         btn_search.pack(side=tk.RIGHT, padx=5)
-        btn_refesh = tk.Button(frame_search, text="load", width=15, command=self.refresh_teacher_list)
+        
+        btn_refesh = tk.Button(frame_search, text="Refresh", width=15, command=self.refresh_teacher_list)
         btn_refesh.pack(side=tk.RIGHT, padx=5)
 
         #Phần dưới (bảng và các nút)
@@ -63,7 +60,7 @@ class Teacher_List(tk.Tk):
         frame_table = tk.Frame(frame_bottom)
         frame_table.pack(side=tk.LEFT, expand="true", fill=tk.BOTH, padx=5)
 
-        columns = ("stt", "id", "name", "gender", "address", "email", "phone", "faculty", "status")
+        columns = ("stt", "id", "name", "gender","phone", "faculty", "status")
         self.tree = ttk.Treeview(frame_table, columns=columns, show="headings")
 
         column_labels = {
@@ -71,8 +68,6 @@ class Teacher_List(tk.Tk):
             "id": "ID",
             "name": "Họ tên",
             "gender": "Giới Tính",
-            "address": "Địa chỉ",
-            "email": "Email",
             "phone": "Số điện thoại",
             "faculty": "Khoa",
             "status": "Trạng thái"
@@ -84,13 +79,11 @@ class Teacher_List(tk.Tk):
 
             # Đặt độ rộng
             self.tree.column("stt", width=30)
-            self.tree.column("id", width=60)
-            self.tree.column("name", width=100)
-            self.tree.column("gender", width=70)
-            self.tree.column("address", width=120)
-            self.tree.column("email", width=100)
-            self.tree.column("phone", width=100)
-            self.tree.column("faculty", width=100)
+            self.tree.column("id", width=90)
+            self.tree.column("name", width=180)
+            self.tree.column("gender", width=50)
+            self.tree.column("phone", width=80)
+            self.tree.column("faculty", width=120)
             self.tree.column("status", width=80)
 
 
@@ -143,20 +136,15 @@ class Teacher_List(tk.Tk):
         i=1
         try:
             teachers = TeacherDAO.get_all()
-            print(teachers.__str__)
             for teacher in teachers:
                 #Lấy tên khoa từ ID khoa
                 department_of_teacher = DepartmentDAO.get_by_id(teacher.department_id)
-                print(department_of_teacher)
                 departmentName_of_teacher = getattr(department_of_teacher, "name", "Không có dữ liệu")
-            
                 self.tree.insert("", "end", values=(
                     i,
                     teacher.id,
                     teacher.fullname,
                     teacher.gender,
-                    teacher.address,
-                    teacher.email,
                     teacher.phone,
                     departmentName_of_teacher,
                     teacher.status,
@@ -249,7 +237,7 @@ class Teacher_List(tk.Tk):
         }
 
          #HÌnh ảnh
-        img_path = "D:\\University\\Pyhon-T2\\python-t2\\dataset\\image_teacher\\Test_img.jpg"
+        img_path = os.path.join(os.path.dirname(__file__), "..", "dataset", "image_teacher", "Test_img.jpg")
 
         if os.path.exists(img_path):
             img = Image.open(img_path)
@@ -412,8 +400,6 @@ class Teacher_List(tk.Tk):
                     teacher.id,
                     teacher.fullname,
                     teacher.gender,
-                    teacher.address,
-                    teacher.email,
                     teacher.phone,
                     departmentName_of_teacher,
                     teacher.status
@@ -468,6 +454,7 @@ class Teacher_List(tk.Tk):
                     break
                 elif sampleNum>100: #luu anh cho den khi dc 100 anh
                     break
+                
             cam.release()
             cv2.destroyAllWindows() 
            

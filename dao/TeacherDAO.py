@@ -4,8 +4,8 @@ from models.Teacher import Teacher
 @staticmethod
 def save(teacher: Teacher):
     db = Database()
-    query = "INSERT INTO teacher (id, fullname, gender, status, address, email, phone, department_id,username,password) VALUES (%s, %s, %s, %s, %s, %s, %s, %s,%s,%s)"
-    values = (teacher.id, teacher.fullname, teacher.gender, teacher.status, teacher.address, teacher.email, teacher.phone, teacher.department_id,teacher.username,teacher.password)
+    query = "INSERT INTO teacher (id, fullname, gender, status, address, email, phone, department_id, username, password) VALUES (%s, %s, %s, %s, %s, %s, %s, %s,%s,%s)"
+    values = (teacher.id, teacher.fullname, teacher.gender, teacher.status, teacher.address, teacher.email, teacher.phone, teacher.department_id, teacher.username, teacher.password)
     db.exec_query(query, values)
     db.close()
 
