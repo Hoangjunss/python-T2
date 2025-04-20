@@ -20,6 +20,9 @@ class TestDAO:
             teacher = TeacherDAO.get_by_username_and_password("GV001", "1")
             if teacher:
                 print("Teacher logged in successfully: ", teacher)
+                list_teacher = TeacherDAO.get_all()
+                for teacher in list_teacher:
+                    print(teacher)
             else:
                 print("Teacher not found.")
         except Exception as e:

@@ -8,7 +8,7 @@ class Database:
             password="13524679",
             database="student_information_management"
         )
-        self.cursor = self.conn.cursor()
+        self.cursor = self.conn.cursor(dictionary=True)
 
     def exec_query(self, query, values=None):
         try:

@@ -28,44 +28,88 @@ def delete(teacher_id: int):
 @staticmethod
 def get_by_id(teacher_id: int) -> Teacher:
     db = Database()
-    query = "SELECT * FROM teacher WHERE id=%s"
+    query = "SELECT id, fullname, gender, status, address, email, phone, department_id, username, password FROM teacher WHERE id=%s"
     values = (teacher_id,)
     result = db.fetch_one(query, values)
     db.close()
     if result:
-        return Teacher(*result)
+        return Teacher(
+            id=result['id'],
+            fullname=result['fullname'],
+            gender=result['gender'],
+            status=result['status'],
+            address=result['address'],
+            email=result['email'],
+            phone=result['phone'],
+            department_id=result['department_id'],
+            username=result['username'],
+            password=result['password']
+        )
     return None
 
 @staticmethod
 def get_all() -> list[Teacher]:
     db = Database()
-    query = "SELECT * FROM teacher"
+    query = "SELECT id, fullname, gender, status, address, email, phone, department_id, username, password FROM teacher"
     result = db.fetch_all(query)
     teachers = []
     for row in result:
-        teachers.append(Teacher(*row))
+        teachers.append(Teacher(
+            id=row['id'],
+            fullname=row['fullname'],
+            gender=row['gender'],
+            status=row['status'],
+            address=row['address'],
+            email=row['email'],
+            phone=row['phone'],
+            department_id=row['department_id'],
+            username=row['username'],
+            password=row['password']
+        ))
     db.close()
     return teachers
 
 @staticmethod
 def get_by_username(username: str) -> Teacher:
     db = Database()
-    query = "SELECT * FROM teacher WHERE username=%s"
+    query = "SELECT id, fullname, gender, status, address, email, phone, department_id, username, password FROM teacher WHERE username=%s"
     values = (username,)
     result = db.fetch_one(query, values)
     db.close()
     if result:
-        return Teacher(*result)
+        return Teacher(
+            id=result['id'],
+            fullname=result['fullname'],
+            gender=result['gender'],
+            status=result['status'],
+            address=result['address'],
+            email=result['email'],
+            phone=result['phone'],
+            department_id=result['department_id'],
+            username=result['username'],
+            password=result['password']
+        )
     return None
 
 @staticmethod
 def get_by_username_and_password(username: str, password: str) -> Teacher:
     db = Database()
-    query = "SELECT * FROM teacher WHERE username=%s AND password=%s"
+    query = "SELECT id, fullname, gender, status, address, email, phone, department_id, username, password FROM teacher WHERE username=%s AND password=%s"
     values = (username, password)
     result = db.fetch_one(query, values)
     db.close()
     if result:
-        return Teacher(*result)
+        return Teacher(
+            id=result['id'],
+            fullname=result['fullname'],
+            gender=result['gender'],
+            status=result['status'],
+            address=result['address'],
+            email=result['email'],
+            phone=result['phone'],
+            department_id=result['department_id'],
+            username=result['username'],
+            password=result['password']
+        )
     return None
 
