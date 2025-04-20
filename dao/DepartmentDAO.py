@@ -28,22 +28,30 @@ def delete(department_id: int):
 @staticmethod
 def get_all() -> list[Department]:
     db = Database()
-    query = "SELECT * FROM department"
+    query = "SELECT id, name, dean_id FROM department"
     result = db.fetch_all(query)
     department = []
     for row in result:
-        department.append(Department(*row))
+        department.append(Department(
+            id=row['id'],
+            name=row['name'],
+            dean_id=row['dean_id']
+        ))
     db.close()
     return department
 
 @staticmethod
 def get_by_id(department_id: int) -> Department:
     db = Database()
-    query = "SELECT * FROM department WHERE id = %s"
+    query = "SELECT id, name, dean_id FROM department WHERE id = %s"
     result = db.fetch_one(query, (department_id,))
     if result:
         db.close()
-        return Department(*result)
+        return Department(
+            id=result['id'],
+            name=result['name'],
+            dean_id=result['dean_id']
+        )
     db.close()
     return None
 
@@ -54,7 +62,7 @@ def count_students_by_department(department_id: int) -> int:
     result = db.fetch_one(query, (department_id,))
     if result:
         db.close()
-        return result
+        return result['total_student']
     db.close()  
     return None
         

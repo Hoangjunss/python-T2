@@ -28,31 +28,46 @@ def delete(semester_id: int):
 @staticmethod
 def get_all() -> list[Semester]:
     db = Database()
-    sql = "SELECT * FROM Semester"
+    sql = "SELECT id, name, startdate, enddate FROM Semester"
     results = db.fetch_all(sql)
     semesters = []
     for row in results:
-        semesters.append(Semester(*row))
+        semesters.append(Semester(
+            id=row['id'],
+            name=row['name'],
+            startdate=row['startdate'],
+            enddate=row['enddate']
+        ))
     db.close()
     return semesters
     
 @staticmethod
 def get_by_id(semester_id)  -> Semester:
     db = Database()
-    sql = "SELECT * FROM Semester WHERE id=%s"
+    sql = "SELECT id, name, startdate, enddate FROM Semester WHERE id=%s"
     result = db.fetch_one(sql, (semester_id,))
     db.close()
     if result:
-        return Semester(*result)
+        return Semester(
+            id=result['id'],
+            name=result['name'],
+            startdate=result['startdate'],
+            enddate=result['enddate']
+        )
     return None
 
 @staticmethod
 def get_by_department_id(department_id) -> list[Semester]:
     db = Database()
-    sql = "SELECT s.* FROM Semester s INNER JOIN schedule sh on s.id = sh.semesterID WHERE sh.departmentID = %s"
+    sql = "SELECT s.id, s.name, s.startdate, s.enddate FROM Semester s INNER JOIN schedule sh on s.id = sh.semesterID WHERE sh.departmentID = %s"
     result = db.fetch_all(sql, (department_id,))
     semesters = []
     for row in result:
-        semesters.append(Semester(*row))
+        semesters.append(Semester(
+            id=row['id'],
+            name=row['name'],
+            startdate=row['startdate'],
+            enddate=row['enddate']
+        ))
     db.close()
     return semesters
