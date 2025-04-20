@@ -13,7 +13,7 @@ CREATE TABLE `Student` (
   `gender` VARCHAR(10),
   `status` VARCHAR(10),
   `dateOfBirth` DATE,
-  `academicYear` VARCHAR(20),
+  `academicYear` VARCHAR(20)
   `address` VARCHAR(255),
   `ethnicity` VARCHAR(100),
   `religion` VARCHAR(100),

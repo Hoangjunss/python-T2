@@ -1,8 +1,60 @@
 import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
+import mysql.connector
+from tkinter import messagebox
+
+# from dao import TeacherDAO
+# from database import ConnectDB
 
 class FormLoginApp:
+
+    @staticmethod
+    def connect_database():
+        return mysql.connector.connect(
+            host = "localhost",
+            user = "root",
+            password = "",
+            database = "student_information_management"
+        )
+
+    def update_password(self):
+        try:
+            conn = self.connect_database()
+
+            cursor = conn.cursor()
+            update_query = "UPDATE TEACHER SET password = phone WHERE password IS NULL"
+            cursor.execute(update_query)
+            conn.commit()
+
+            print(f"Đã cập nhật {cursor.rowcount} giáo viên.")
+        except mysql.connector.Error as e:
+            print(f" Lỗi khi cập nhật: {e}")
+        finally:
+                cursor.close()
+                conn.close()
+
+    def check_login(self):
+        username = self.userNameTeacher.get()
+        password = self.passwordTeacher.get()
+
+        conn = self.connect_database()
+        cursor = conn.cursor()
+
+        cursor.execute("SELECT * FROM TEACHER WHERE username=%s AND password=%s", (username, password))
+        result = cursor.fetchone()
+
+        if result:
+            messagebox.showinfo("Thông báo", "Đăng nhập thành công")
+            print(f"Đăng nhập thành công.")
+        else:
+            messagebox.showerror("Lỗi", "Đăng nhập không thành công")
+            print(f"Đăng nhập không thành công.")
+
+        cursor.close()
+        conn.close()
+
+
     def __init__(self, root):
         self.root = root
         self.root.title("Welcome")
@@ -37,7 +89,7 @@ class FormLoginApp:
     def build_welcome_frame(self, w, h):
         frame = self.frames["welcome"]
 
-        bg = Image.open(r"D:\University\Exercise\PYTHON\python-T2\dataset\image_form\imgForm.jpg")
+        bg = Image.open(r"Dataset/image_form/imgForm.jpg")
         bg = bg.resize((w, h), Image.Resampling.LANCZOS)
         self.bg_welcome_img = ImageTk.PhotoImage(bg)
         tk.Label(frame, image=self.bg_welcome_img).place(x=0, y=0, relwidth=1, relheight=1)
@@ -50,8 +102,9 @@ class FormLoginApp:
 
     def build_teacher_frame(self, w, h):
         frame = self.frames["teacher"]
+        self.update_password()
 
-        bg = Image.open(r"D:\University\Exercise\PYTHON\python-T2\dataset\image_form\imgForm.jpg")
+        bg = Image.open(r"Dataset/image_form/imgForm.jpg")
         bg = bg.resize((w, h), Image.Resampling.LANCZOS)
         self.bg_teacher_img = ImageTk.PhotoImage(bg)
         tk.Label(frame, image=self.bg_teacher_img).place(x=0, y=0, relwidth=1, relheight=1)
@@ -61,17 +114,19 @@ class FormLoginApp:
         tk.Label(frame, text="Tên đăng nhập: ", font=("Times New Roman", 27)).place(x=350, y=350)
         tk.Label(frame, text="Mật khẩu: ", font=("Times New Roman", 27)).place(x=420, y=450)
 
-        tk.Entry(frame, font=("Times New Roman", 25), width=30).place(x=600, y=350)
-        tk.Entry(frame, font=("Times New Roman", 25), width=30, show="*").place(x=600, y=450)
+        self.userNameTeacher = tk.Entry(frame, font=("Times New Roman", 25), width=30)
+        self.userNameTeacher.place(x=600, y=350)
+        self.passwordTeacher = tk.Entry(frame, font=("Times New Roman", 25), width=30, show="*")
+        self.passwordTeacher.place(x=600, y=450)
 
-        tk.Button(frame, text="Truy cập", font=("Times New Roman", 25), fg="red", bd=0).place(x=670, y=530)
+        tk.Button(frame, text="Truy cập", font=("Times New Roman", 25), fg="red", bd=0, command=lambda:self.check_login()).place(x=670, y=530)
         tk.Button(frame, text="Quay lại trang chủ", font=("Times New Roman", 20), bd=0,
                   command=lambda: self.show_frame("welcome")).place(x=30, y=30)
 
     def build_student_frame(self, w, h):
         frame = self.frames["student"]
 
-        bg = Image.open(r"D:\University\Exercise\PYTHON\python-T2\dataset\image_form\imgForm.jpg")
+        bg = Image.open(r"Dataset/image_form/imgForm.jpg")
         bg = bg.resize((w, h), Image.Resampling.LANCZOS)
         self.bg_student_img = ImageTk.PhotoImage(bg)
         tk.Label(frame, image=self.bg_student_img).place(x=0, y=0, relwidth=1, relheight=1)
@@ -91,5 +146,5 @@ class FormLoginApp:
 
 if __name__ == "__main__":
     root = tk.Tk()
-    app = FormLoginApp(root)
+    app = FormLoginApp(root)    
     root.mainloop()

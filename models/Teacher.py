@@ -27,3 +27,4 @@ class Teacher:
         return (f"Teacher(id={self.id}, username='{self.username}', fullname='{self.fullname}', gender='{self.gender}', "
                 f"status='{self.status}', address='{self.address}', email='{self.email}', "
                 f"phone='{self.phone}', department_id='{self.department_id}', password='{self.password}')")
+    
