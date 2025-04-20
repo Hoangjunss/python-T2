@@ -28,44 +28,72 @@ def delete(id: int):
 @staticmethod
 def get_all() -> list[Attendances]:
     db = Database()
-    sql = "SELECT * FROM attendances"
+    sql = "SELECT id, class_id, student_id, status, checkin_time, scheduledetail_id FROM attendances"
     result = db.fetch_all(sql)
     attendances = []
     for row in result:
-        attendances.append(Attendances(*row))
+        attendances.append(Attendances(
+            id=row['id'],
+            class_id=row['class_id'],
+            student_id=row['student_id'],
+            status=row['status'],
+            checkin_time=row['checkin_time'],
+            scheduledetail_id=row['scheduledetail_id']
+        ))
     db.close()
     return attendances
 
 @staticmethod
 def get_by_id(id: int) -> Attendances:
     db = Database()
-    sql = "SELECT * FROM Attendances WHERE id=%s"
+    sql = "SELECT id, class_id, student_id, status, checkin_time, scheduledetail_id FROM Attendances WHERE id=%s"
     result = db.fetch_one(sql, (id,))
     if result:
         db.close()
-        return Attendances(*result)
+        return Attendances(
+            id=result['id'],
+            class_id=result['class_id'],
+            student_id=result['student_id'],
+            status=result['status'],
+            checkin_time=result['checkin_time'],
+            scheduledetail_id=result['scheduledetail_id']
+        )
     db.close()
     return None
 
 @staticmethod
 def get_by_student_id(student_id: int) -> list[Attendances]:
     db = Database()
-    sql = "SELECT * FROM Attendances WHERE student_id=%s"
+    sql = "SELECT id, class_id, student_id, status, checkin_time, scheduledetail_id FROM Attendances WHERE student_id=%s"
     result = db.fetch_all(sql, (student_id,))
     attendances = []
     for row in result:
-        attendances.append(Attendances(*row))
+        attendances.append(Attendances(
+            id=row['id'],
+            class_id=row['class_id'],
+            student_id=row['student_id'],
+            status=row['status'],
+            checkin_time=row['checkin_time'],
+            scheduledetail_id=row['scheduledetail_id']
+        ))
     db.close()
     return attendances
 
 @staticmethod
 def get_by_class_id(class_id: int) -> list[Attendances]:
     db = Database()
-    sql = "SELECT * FROM Attendances WHERE class_id=%s"
+    sql = "SELECT id, class_id, student_id, status, checkin_time, scheduledetail_id FROM Attendances WHERE class_id=%s"
     result = db.fetch_one(sql, (class_id,))
     attendances = []
     for row in result:
-        attendances.append(Attendances(*row))
+        attendances.append(Attendances(
+            id=row['id'],
+            class_id=row['class_id'],
+            student_id=row['student_id'],
+            status=row['status'],
+            checkin_time=row['checkin_time'],
+            scheduledetail_id=row['scheduledetail_id']
+        ))
     return attendances
 
 @staticmethod
@@ -73,10 +101,10 @@ def get_addtendent_by_time(time=None, classid=None, studentid=None) -> list[Atte
     db = Database()
         
     if time:
-        sql = "SELECT * FROM Attendances WHERE DATE(checkin_time) = DATE(%s)"
+        sql = "SELECT id, class_id, student_id, status, checkin_time, scheduledetail_id FROM Attendances WHERE DATE(checkin_time) = DATE(%s)"
         values = (time,)
     else:
-        sql = "SELECT * FROM Attendances WHERE DATE(checkin_time) = CURDATE()"
+        sql = "SELECT id, class_id, student_id, status, checkin_time, scheduledetail_id FROM Attendances WHERE DATE(checkin_time) = CURDATE()"
         values = ()
 
     if classid:
@@ -89,7 +117,14 @@ def get_addtendent_by_time(time=None, classid=None, studentid=None) -> list[Atte
         
     try:
         result = db.fetch_all(sql, values)
-        attendances = [Attendances(*row) for row in result]
+        attendances = [Attendances(
+            id=row['id'],
+            class_id=row['class_id'],
+            student_id=row['student_id'],
+            status=row['status'],
+            checkin_time=row['checkin_time'],
+            scheduledetail_id=row['scheduledetail_id']
+        ) for row in result]
         return attendances
     except Exception as e:
         print(f"Error while fetching attendance: {e}")

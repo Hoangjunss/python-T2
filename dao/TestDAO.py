@@ -1,8 +1,9 @@
-from dao.StudentDAO import StudentDAO
+from dao import StudentDAO
 from dao import TeacherDAO
 from dao import ClassDAO
 from dao import DepartmentDAO
 from dao import SemesterDAO
+from dao import AttendancesDAO
 from models.Students import Student
 from models.Teacher import Teacher
 from models.Class import Class
@@ -13,13 +14,16 @@ from datetime import date
 class TestDAO:
     def __init__(self):
         print("Test class initialized.")
-        self.teacher_login()
+        self.test_get_all()
 
     def teacher_login(self):
         try:
             teacher = TeacherDAO.get_by_username_and_password("GV001", "1")
             if teacher:
                 print("Teacher logged in successfully: ", teacher)
+                list_teacher = TeacherDAO.get_all()
+                for teacher in list_teacher:
+                    print(teacher)
             else:
                 print("Teacher not found.")
         except Exception as e:
@@ -41,6 +45,9 @@ class TestDAO:
         
         print("\n=== Testing SemesterDAO ===")
         self.test_semester_dao()
+        
+        print("\n=== Testing get_all() for all DAOs ===")
+        self.test_get_all()
 
     def test_student_dao(self):
         """Test StudentDAO operations"""
@@ -275,6 +282,70 @@ class TestDAO:
 
         except Exception as e:
             print(f"✗ Error in SemesterDAO tests: {str(e)}")
+            
+    def test_get_all(self):
+        """
+        Test hàm get_all() cho tất cả các lớp DAO
+        """
+        print("\n=== Testing get_all() for all DAOs ===\n")
+        
+        # Test StudentDAO.get_all()
+        print("Testing StudentDAO.get_all()...")
+        try:
+            students = StudentDAO.get_all()
+            print(f"✓ Successfully retrieved {len(students)} students")
+            for student in students[:5]:  # In ra 5 sinh viên đầu tiên
+                print(f"  - {student}")
+            if len(students) > 5:
+                print(f"  ... and {len(students) - 5} more students")
+        except Exception as e:
+            print(f"✗ Error in StudentDAO.get_all(): {str(e)}")
+        
+        # Test ClassDAO.get_all()
+        print("\nTesting ClassDAO.get_all()...")
+        try:
+            classes = ClassDAO.get_all()
+            print(f"✓ Successfully retrieved {len(classes)} classes")
+            for class_obj in classes[:5]:  # In ra 5 lớp đầu tiên
+                print(f"  - {class_obj}")
+            if len(classes) > 5:
+                print(f"  ... and {len(classes) - 5} more classes")
+        except Exception as e:
+            print(f"✗ Error in ClassDAO.get_all(): {str(e)}")
+        
+        # Test TeacherDAO.get_all()
+        print("\nTesting TeacherDAO.get_all()...")
+        try:
+            teachers = TeacherDAO.get_all()
+            print(f"✓ Successfully retrieved {len(teachers)} teachers")
+            for teacher in teachers[:5]:  # In ra 5 giáo viên đầu tiên
+                print(f"  - {teacher}")
+            if len(teachers) > 5:
+                print(f"  ... and {len(teachers) - 5} more teachers")
+        except Exception as e:
+            print(f"✗ Error in TeacherDAO.get_all(): {str(e)}")
+        
+        # Test DepartmentDAO.get_all()
+        print("\nTesting DepartmentDAO.get_all()...")
+        try:
+            departments = DepartmentDAO.get_all()
+            print(f"✓ Successfully retrieved {len(departments)} departments")
+            for department in departments:
+                print(f"  - {department}")
+        except Exception as e:
+            print(f"✗ Error in DepartmentDAO.get_all(): {str(e)}")
+        
+        # Test AttendancesDAO.get_all()
+        print("\nTesting AttendancesDAO.get_all()...")
+        try:
+            attendances = AttendancesDAO.get_all()
+            print(f"✓ Successfully retrieved {len(attendances)} attendances")
+            for attendance in attendances[:5]:  # In ra 5 điểm danh đầu tiên
+                print(f"  - {attendance}")
+            if len(attendances) > 5:
+                print(f"  ... and {len(attendances) - 5} more attendances")
+        except Exception as e:
+            print(f"✗ Error in AttendancesDAO.get_all(): {str(e)}")
 
 if __name__ == "__main__":
     test = TestDAO()

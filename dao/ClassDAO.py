@@ -28,22 +28,40 @@ def delete(id: int):
 @staticmethod
 def get_all() -> list[Class]:
     db = Database()
-    sql = "SELECT * FROM Class"
+    sql = "SELECT id, name, grade_level, teacher_id, academic_year, room, total_student, description FROM Class"
     results = db.fetch_all(sql)
     edu_class = []
     for row in results:
-        edu_class.append(Class(*row))
+        edu_class.append(Class(
+            id=row['id'],
+            name=row['name'],
+            grade_level=row['grade_level'],
+            teacher_id=row['teacher_id'],
+            academic_year=row['academic_year'],
+            room=row['room'],
+            total_student=row['total_student'],
+            description=row['description']
+        ))
     db.close()
     return edu_class
 
 @staticmethod
 def get_by_id(id: int) -> Class:
     db = Database()
-    sql = "SELECT * FROM Class WHERE id=%s"
+    sql = "SELECT id, name, grade_level, teacher_id, academic_year, room, total_student, description FROM Class WHERE id=%s"
     values = (id,)
     result = db.fetch_one(sql, values)
     if result:
         db.close()
-        return Class(*result)
+        return Class(
+            id=result['id'],
+            name=result['name'],
+            grade_level=result['grade_level'],
+            teacher_id=result['teacher_id'],
+            academic_year=result['academic_year'],
+            room=result['room'],
+            total_student=result['total_student'],
+            description=result['description']
+        )
     db.close()
     return None
