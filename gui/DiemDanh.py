@@ -5,7 +5,9 @@ import sys
 import os
 import cv2,os
 import pandas as pd
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 from dao import AttendancesDAO, ClassDAO, DepartmentDAO, StudentDAO
 import datetime
 import time
@@ -15,16 +17,14 @@ from datetime import datetime
 from dao.TestDAO import TestDAO
 from models.Students import Student
 from models.Attendances import Attendances
-class DiemDanh(tk.Tk):
-    def __init__(self):
-        super().__init__()
+class DiemDanh(tk.Frame):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.parent = parent
         self.DiemDanh()
         self.refresh_list()
-        self.mainloop()
 
     def DiemDanh(self):
-        self.title('Phần Mềm Điểm Danh Sinh Viên Bằng Nhận Diện Khuôn Mặt')
-        self.geometry('850x650')
 
         frame_top = tk.Frame(self)
         frame_top.pack(fill=tk.X, padx=10, pady=10)
@@ -52,9 +52,9 @@ class DiemDanh(tk.Tk):
 
         self.tree.column("STT", width=30)
         self.tree.column("MSSV", width=80)
-        self.tree.column("Họ tên", width=200)
-        self.tree.column("Ngày sinh", width=120)
-        self.tree.column("Giới tính", width=80)
+        self.tree.column("Họ tên", width=180)
+        self.tree.column("Ngày sinh", width=90)
+        self.tree.column("Giới tính", width=50)
         self.tree.column("Thời gian", width=120)
         self.tree.column("Trạng thái", width=120)
 
@@ -73,7 +73,6 @@ class DiemDanh(tk.Tk):
             self.tree.delete(item)
         i=1
         try:
-            print(AttendancesDAO.get_all())
             attendance = AttendancesDAO.get_all()
             for at in attendance:
                 student_info = StudentDAO.get_by_id(at.student_id)

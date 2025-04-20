@@ -50,7 +50,7 @@ class Teacher_List(tk.Frame):
         btn_search.pack(side=tk.RIGHT, padx=5)
         
         btn_refesh = tk.Button(frame_search, text="Refresh", width=15, command=self.refresh_teacher_list)
-        btn_refesh.pack(side=tk.RIGHT, padx=5)
+        btn_refesh.pack(side=tk.RIGHT, padx=5)  
 
         #Phần dưới (bảng và các nút)
         frame_bottom = tk.Frame(self)

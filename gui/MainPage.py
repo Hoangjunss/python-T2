@@ -4,6 +4,8 @@ import tkinter as tk
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
+from gui.DiemDanh import DiemDanh
+from gui.GiaoDientest import ScheduleManager
 from gui.ListTeacher import Teacher_List
 from gui.StudentGUI import Student_List
 
@@ -34,7 +36,8 @@ class MainPage(tk.Tk):
             # ("🏫 Danh sách SV", self.show_student_list),
             ("➕ Sinh viên", self.StudentGUI),
             ("👩‍🏫 Giáo viên", self.TeacherGUI),
-            ("Mấy chức năng khác", self.test),
+            ("Khoa", self.DepartmentGUI),
+            ("🗓️ Điểm danh", self.DiemDanh),
             ("🚪 Thoát", self.quit_program)
         ]
 
@@ -65,10 +68,22 @@ class MainPage(tk.Tk):
         self.current_page = Teacher_List(self.main_content)  # Tạo giao diện mới
         self.current_page.pack(fill="both", expand=True)
 
+    def DepartmentGUI(self):
+        """Hiển thị giao diện Khoa."""
+        self.clear_main_content()
+        self.current_page = ScheduleManager(self.main_content)  # Tạo giao diện mới
+        self.current_page.pack(fill="both", expand=True)
+
+    def DiemDanh(self):
+        """Hiển thị giao diện Điểm Danh."""
+        self.clear_main_content()
+        self.current_page = DiemDanh(self.main_content)
+        self.current_page.pack(fill="both", expand=True)
 
     def quit_program(self):
         """Thoát chương trình."""
         self.destroy()
+
     
 if __name__ == "__main__":
     app = MainPage()
