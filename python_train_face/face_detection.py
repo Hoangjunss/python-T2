@@ -60,6 +60,8 @@ def detect_faces_in_folder(image_folder, output_folder):
             img_name_wo_ext = os.path.splitext(img_name)[0]  # bỏ phần mở rộng
             save_faces_mtcnn(img, mtcnn_faces, user_face_folder, img_name_wo_ext)
 
-image_folder = "image"
-output_folder = "faces"
+# Get the directory of the current file
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+image_folder = os.path.join(CURRENT_DIR, "image")
+output_folder = os.path.join(CURRENT_DIR, "faces")
 detect_faces_in_folder(image_folder, output_folder)

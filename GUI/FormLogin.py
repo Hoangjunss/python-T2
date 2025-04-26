@@ -90,9 +90,17 @@ class FormLoginApp:
         self.build_student_frame(screen_width, screen_height)
 
     def open_DDSV(self):
+        # Thay vì tạo instance mới và gọi mainloop ngay lập tức
+        # Chỉ chuyển sang form DiemDanhSinhVien
         self.root.destroy()
-        DDSV = DiemDanhSinhVien()
+        DDSV = DiemDanhSinhVien(on_back=self.show_login)
         DDSV.mainloop()
+
+    def show_login(self):
+        # Hàm callback để quay lại form login
+        root = tk.Tk()
+        app = FormLoginApp(root)    
+        root.mainloop()
 
     def show_frame(self, frame_name):
         self.frames[frame_name].tkraise()

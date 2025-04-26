@@ -2,12 +2,15 @@ import cv2
 import numpy as np
 from mtcnn import MTCNN
 import tensorflow as tf
+import os
 
 from sklearn.preprocessing import LabelEncoder
 
 IMG_SIZE = 160
-MODEL_PATH = "face_recognition_model.h5"
-LABEL_PATH = "labels.npy"
+# Get the directory of the current file
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_PATH = os.path.join(CURRENT_DIR, "face_recognition_model.h5")
+LABEL_PATH = os.path.join(CURRENT_DIR, "labels.npy")
 
 # Load model đã train
 model = tf.keras.models.load_model(MODEL_PATH)
@@ -69,4 +72,4 @@ def detect_face_from_webcam_mtcnn():
 
     cap.release()
     cv2.destroyAllWindows()
-detect_face_from_webcam_mtcnn()
+#detect_face_from_webcam_mtcnn()

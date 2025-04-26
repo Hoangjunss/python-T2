@@ -43,7 +43,7 @@ class DiemDanhSinhVien(tk.Tk):
                 
                 # Format thời gian điểm danh
                 checkin_time = attendance.checkin_time.strftime('%H:%M:%S %d/%m/%Y') if attendance.checkin_time else ''
-                
+                    
                 # Format giới tính
                 gender = 'Nam' if attendance.student.gender == 1 else 'Nữ' if attendance.student.gender == 0 else ''
                 
@@ -132,14 +132,22 @@ class DiemDanhSinhVien(tk.Tk):
         self.table.pack(expand=True, fill="both")
         
     def diem_danh(self):
+        """Mở camera để điểm danh"""
         webcam.detect_face_from_webcam_mtcnn()
-        pass
+        # Sau khi đóng camera, cập nhật dữ liệu điểm danh
+        self.load_attendance_data()
         
     def go_back(self):
         """Quay lại form login"""
         self.destroy()
         if self.on_back:
             self.on_back()
+        else:
+            # Nếu không có callback, tạo form login mới
+            root = tk.Tk()
+            from gui.FormLogin import FormLoginApp
+            app = FormLoginApp(root)    
+            root.mainloop()
 
 if __name__ == "__main__":
     app = DiemDanhSinhVien()
