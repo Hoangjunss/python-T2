@@ -10,7 +10,7 @@ import cv2,os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from dao import ClassDAO, DepartmentDAO, StudentDAO 
-from GUI.UI import AddStudentGUI
+from gui.UI import AddStudentGUI
 from models.Students import Student
 
 

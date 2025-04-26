@@ -3,6 +3,7 @@ from tkinter import ttk
 from PIL import Image, ImageTk
 import mysql.connector
 from tkinter import messagebox
+from gui.MainPage import MainPage
 
 # from dao import TeacherDAO
 # from database import ConnectDB
@@ -14,7 +15,7 @@ class FormLoginApp:
         return mysql.connector.connect(
             host = "localhost",
             user = "root",
-            password = "",
+            password = "13524679",
             database = "student_information_management"
         )
 
@@ -47,6 +48,11 @@ class FormLoginApp:
         if result:
             messagebox.showinfo("Thông báo", "Đăng nhập thành công")
             print(f"Đăng nhập thành công.")
+            # Đóng form login
+            self.root.destroy()
+            # Mở MainPage
+            main_page = MainPage()
+            main_page.mainloop()
         else:
             messagebox.showerror("Lỗi", "Đăng nhập không thành công")
             print(f"Đăng nhập không thành công.")

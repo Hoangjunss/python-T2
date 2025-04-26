@@ -4,7 +4,6 @@ import numpy as np
 import tensorflow as tf
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
-from face_detection import detect_faces
 
 IMG_SIZE = 160  # Kích thước ảnh chuẩn
 FACES_DIR = "faces"  # Thư mục chứa các ảnh khuôn mặt của mỗi user
