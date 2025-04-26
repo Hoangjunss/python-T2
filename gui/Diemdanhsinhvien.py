@@ -4,6 +4,8 @@ import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
 from datetime import datetime
+import python_train_face.webcam as webcam
+
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from dao import AttendancesDAO
@@ -130,7 +132,7 @@ class DiemDanhSinhVien(tk.Tk):
         self.table.pack(expand=True, fill="both")
         
     def diem_danh(self):
-        # TODO: Implement attendance logic here
+        webcam.detect_face_from_webcam_mtcnn()
         pass
         
     def go_back(self):
