@@ -4,8 +4,9 @@ from models.Attendances import Attendances
 @staticmethod
 def save(attendances: Attendances):
     db = Database()
-    sql = "INSERT INTO Attendances(id, class_id, student_id, status, checkin_time) VALUES (%s, %s, %s, %s, %s)"
-    values = (attendances.id, attendances.class_id, attendances.student_id, attendances.status, attendances.checkin_time)
+    class_id = db.fetch_one("SELECT class_id FROM Student WHERE id = %s", (attendances.student_id,))
+    sql = "INSERT INTO Attendances(id, class_id, student_id, scheduledetail_id, status, checkin_time) VALUES (%s, %s, %s, %s, %s, %s)"
+    values = (attendances.id, class_id, attendances.student_id, attendances.scheduledetail_id, attendances.status, attendances.checkin_time)
     db.exec_query(sql, values)
     db.close()
 

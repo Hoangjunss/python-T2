@@ -1,6 +1,6 @@
 
 class Attendances:
-    def __init__(self, id, class_id, student_id, status, checkin_time, scheduledetail_id):
+    def __init__(self, id=None, class_id=None, student_id=None, status=None, checkin_time=None, scheduledetail_id=None):
         self.id = id
         self.class_id = class_id
         self.student_id = student_id
