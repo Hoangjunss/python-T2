@@ -6,7 +6,9 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 
 IMG_SIZE = 160  # Kích thước ảnh chuẩn
-FACES_DIR = "faces"  # Thư mục chứa các ảnh khuôn mặt của mỗi user
+# Get the directory of the current file
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+FACES_DIR = os.path.join(CURRENT_DIR, "faces")  # Thư mục chứa các ảnh khuôn mặt của mỗi user
 
 # Tải dữ liệu từ thư mục chứa ảnh khuôn mặt
 def load_faces_data(faces_dir):
