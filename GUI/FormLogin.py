@@ -4,7 +4,7 @@ from PIL import Image, ImageTk
 import mysql.connector
 from tkinter import messagebox
 from gui.MainPage import MainPage
-
+from gui.Diemdanhsinhvien import DiemDanhSinhVien
 # from dao import TeacherDAO
 # from database import ConnectDB
 
@@ -89,8 +89,15 @@ class FormLoginApp:
         self.build_teacher_frame(screen_width, screen_height)
         self.build_student_frame(screen_width, screen_height)
 
+    def open_DDSV(self):
+        self.root.destroy()
+        DDSV = DiemDanhSinhVien()
+        DDSV.mainloop()
+
     def show_frame(self, frame_name):
         self.frames[frame_name].tkraise()
+        
+
 
     def build_welcome_frame(self, w, h):
         frame = self.frames["welcome"]
@@ -104,7 +111,7 @@ class FormLoginApp:
         tk.Button(frame, text="Bạn là Giáo Viên", font=("Times New Roman", 30), fg="red", bd=0,
                   command=lambda: self.show_frame("teacher")).place(x=330, y=350)
         tk.Button(frame, text="Bạn là Sinh Viên", font=("Times New Roman", 30), fg="red", bd=0,
-                  command=lambda: self.show_frame("student")).place(x=900, y=350)
+                  command=lambda: self.open_DDSV()).place(x=900, y=350)
 
     def build_teacher_frame(self, w, h):
         frame = self.frames["teacher"]
