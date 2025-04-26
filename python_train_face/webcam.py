@@ -4,6 +4,9 @@ from mtcnn import MTCNN
 import tensorflow as tf
 
 from sklearn.preprocessing import LabelEncoder
+from dao import AttendancesDAO, StudentDAO
+from models.Students import Student
+from models.Attendances import Attendances
 
 IMG_SIZE = 160
 MODEL_PATH = "face_recognition_model.h5"
@@ -40,7 +43,7 @@ def detect_face_from_webcam_mtcnn():
     if not cap.isOpened():
         print("Không thể mở webcam")
         return
-
+    detected_names = []
     while True:
         ret, frame = cap.read()
         if not ret:
@@ -49,7 +52,7 @@ def detect_face_from_webcam_mtcnn():
 
         img_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         faces = detector.detect_faces(img_rgb)
-
+        recognized_faces = []
         for face in faces:
             x, y, w, h = face['box']
             x, y = max(0, x), max(0, y)
@@ -61,6 +64,12 @@ def detect_face_from_webcam_mtcnn():
             cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)
             cv2.putText(frame, f"{name} ({confidence:.2f})", (x, y - 10),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 0, 0), 2)
+            recognized_faces.append((name, confidence))
+        for name, confidence in recognized_faces:
+            if name not in detected_names:  # Kiểm tra xem tên đã được nhận diện chưa
+                detected_names.append(name)  # Thêm tên vào danh sách đã nhận diện
+                save_to_db(name, confidence)  # Lưu vào DB
+
 
         cv2.imshow("Webcam - Face Recognition (MTCNN)", frame)
 
@@ -69,4 +78,14 @@ def detect_face_from_webcam_mtcnn():
 
     cap.release()
     cv2.destroyAllWindows()
+def save_to_db(name, confidence):
+    print(f"Lưu vào DB: {name} - {confidence:.2f}")
+    name_student, student_id = name.split('_')
+    student= StudentDAO.get_by_id(student_id)
+    if student:
+        attendance = Attendances(student_id=student.id, status=1)
+        AttendancesDAO.save(attendance)
+       
+    
+
 detect_face_from_webcam_mtcnn()
