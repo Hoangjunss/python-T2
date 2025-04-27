@@ -263,10 +263,14 @@ class Student_List(tk.Frame):
             if btnSua.cget("text") == "Sửa":
                 btnSua.config(text="Lưu", command=save_changes, bg="#4CAF50")  # Đổi thành nút "Lưu"
                 btnDong.config(text="Hủy", command=cancel_edit, bg="#f44336")  # Đổi thành nút "Hủy"
-
+        
                 status_options = ["Đang học", "Bảo lưu", "Đình chỉ", "Tốt nghiệp", "Khác"]
-
-                # Chuyển label thành Entry để chỉnh sửa
+        
+                # Lấy danh sách các khoa từ cơ sở dữ liệu
+                departments = DepartmentDAO.get_all()
+                department_names = [dept.name for dept in departments]
+        
+                # Chuyển label thành Entry hoặc Combobox để chỉnh sửa
                 for i, (label, value) in enumerate(labels):
                     if label == "Trạng thái:":
                         combobox = ttk.Combobox(detail_window, values=status_options, state="readonly", font=("Arial", 10))
@@ -274,13 +278,18 @@ class Student_List(tk.Frame):
                         combobox.grid(row=i, column=1, sticky="w", padx=8, pady=2)
                         self.value_labels[i].destroy()  # Xóa label cũ
                         self.value_labels[i] = combobox  # Thay thế bằng combobox
-                    elif label != "Mã SV:" and label != "Lớp:" and label != "Khoa:":  # Các trường khác dùng Entry
+                    elif label == "Khoa:":
+                        combobox = ttk.Combobox(detail_window, values=department_names, state="readonly", font=("Arial", 10))
+                        combobox.set(self.value_labels[i].cget("text"))  # Đặt giá trị ban đầu
+                        combobox.grid(row=i, column=1, sticky="w", padx=8, pady=2)
+                        self.value_labels[i].destroy()  # Xóa label cũ
+                        self.value_labels[i] = combobox  # Thay thế bằng combobox
+                    elif label != "Mã SV:" and label != "Lớp:":  # Các trường khác dùng Entry
                         entry = tk.Entry(detail_window, font=("Arial", 10))
                         entry.insert(0, self.value_labels[i].cget("text"))
                         entry.grid(row=i, column=1, sticky="w", padx=8, pady=2)
                         self.value_labels[i].destroy()
                         self.value_labels[i] = entry
-
             elif btnSua.cget("text") == "Lưu" and btnDong.cget("text") == "Hủy":
                 # Kiểm tra dữ liệu đã nhập vào Entry
                 btnDong.config(text="Đóng", width=btn_width, command=detail_window.destroy,  bg="SystemButtonFace")
@@ -312,6 +321,12 @@ class Student_List(tk.Frame):
                     value.get() if isinstance(value, (tk.Entry, ttk.Combobox)) else value.cget("text")
                     for value in self.value_labels
                 ]
+
+                 # Lấy mã khoa từ tên khoa
+                selected_department_name = new_values[5]  # "Khoa" nằm ở vị trí thứ 5 trong danh sách labels
+                selected_department = next((dept for dept in DepartmentDAO.get_all() if dept.name == selected_department_name), None)
+                if selected_department:
+                    student_details.departmentId = selected_department.id
 
                 # Cập nhật dữ liệu vào đối tượng student_details
                 student_details.fullname = new_values[1]

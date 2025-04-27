@@ -33,8 +33,8 @@ class ScheduleViewer:
         self.listSchedule.heading("#0", text="Giờ/Thứ", anchor="center")
 
         styleListSchedule = ttk.Style()
-        styleListSchedule.configure("Treeview", rowheight=60, font=("Times New Roman", 16))
-        styleListSchedule.configure("Treeview.Heading", font=("Times New Roman", 18, "bold"),
+        styleListSchedule.configure("Treeview", rowheight=60, font=("Arial", 16))
+        styleListSchedule.configure("Treeview.Heading", font=("Arial", 18, "bold"),
                                     foreground="red", background="blue")
 
     def populate_schedule(self, department_id, semester_id):

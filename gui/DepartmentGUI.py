@@ -9,17 +9,13 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from dao import DepartmentDAO
 from models.Department import Department
 
-class DepartmentGUI(tk.Tk):
-    def __init__(self):
-        super().__init__()
+class DepartmentGUI(tk.Frame):
+    def __init__(self, parent=None):
+        super().__init__(parent)
         self.gui_Department()
         self.refresh_department_list()
-        self.mainloop()
 
     def gui_Department(self):
-        self.title('Phần Mềm Điểm Danh Sinh Viên Bằng Nhận Diện Khuôn Mặt')
-        self.geometry('850x650')
-
         # Phần trên (tiêu đề và tìm kiếm)
         frame_top = tk.Frame(self)
         frame_top.pack(fill=tk.X, padx=10, pady=10)
@@ -97,11 +93,6 @@ class DepartmentGUI(tk.Tk):
                     quantity_students,
                 ))
                 i += 1
-                # print("=============================================")
-                # print(dep.id)
-                # print(dep.name)
-                # print(quantity_students)
-                # print("=============================================")
         except Exception as e:
             print(f"Error: {e}")
             messagebox.showerror("Error", str(e))   
@@ -114,21 +105,21 @@ class DepartmentGUI(tk.Tk):
         self.detail_window.resizable(False, False)
 
         # Tiêu đề
-        title_label = tk.Label(self.detail_window, text="Thêm khoa", font=("Times New Roman", 22, "bold"), bg="white", fg="red")
+        title_label = tk.Label(self.detail_window, text="Thêm khoa", font=("Arial", 12, "bold"), bg="white", fg="red")
         title_label.pack(pady=20)
 
         # Label + Entry: Tên khoa
         name_frame = tk.Frame(self.detail_window, bg="white")
         name_frame.pack(pady=10)
 
-        name_label = tk.Label(name_frame, text="Tên khoa:", font=("Times New Roman", 18), bg="white")
+        name_label = tk.Label(name_frame, text="Tên khoa:", font=("Arial", 18), bg="white")
         name_label.pack(side="left", padx=10)
 
-        self.department_name_entry = tk.Entry(name_frame, font=("Times New Roman", 18), width=20)
+        self.department_name_entry = tk.Entry(name_frame, font=("Arial", 18), width=20)
         self.department_name_entry.pack(side="left")
 
         # Nút "Thêm"
-        add_button = tk.Button(self.detail_window, text="Thêm khoa", font=("Times New Roman", 16, "bold"),
+        add_button = tk.Button(self.detail_window, text="Thêm khoa", font=("Arial", 16, "bold"),
                             bg="#4CAF50", fg="white", width=15, height=2, bd=0, command=self.save_department)
         add_button.pack(pady=20)
 
@@ -139,7 +130,7 @@ class DepartmentGUI(tk.Tk):
         self.edit_window.configure(bg="white")
         self.edit_window.resizable(False, False)
 
-        title_label = tk.Label(self.edit_window, font=("Times New Roman", 25, "bold"),
+        title_label = tk.Label(self.edit_window, font=("Arial", 25, "bold"),
                             text="Cập nhật mới thông tin khoa", bg="white", fg="red")
         title_label.place(x=200, y=30)
 
@@ -148,29 +139,29 @@ class DepartmentGUI(tk.Tk):
         locationY = 100
         backUpLocationY = 70
 
-        stt_label = tk.Label(self.edit_window, font=("Times New Roman", 17), text="STT:", bg="white", fg="black")
+        stt_label = tk.Label(self.edit_window, font=("Arial", 17), text="STT:", bg="white", fg="black")
         stt_label.place(x=locationX, y=locationY)
-        id_label = tk.Label(self.edit_window, font=("Times New Roman", 17), text="MÃ KHOA:", bg="white", fg="black")
+        id_label = tk.Label(self.edit_window, font=("Arial", 17), text="MÃ KHOA:", bg="white", fg="black")
         id_label.place(x=locationX, y=locationY + backUpLocationY)
-        name_label = tk.Label(self.edit_window, font=("Times New Roman", 17), text="TÊN KHOA:", bg="white", fg="black")
+        name_label = tk.Label(self.edit_window, font=("Arial", 17), text="TÊN KHOA:", bg="white", fg="black")
         name_label.place(x=locationX, y=locationY + 2 * backUpLocationY)
-        lead_label = tk.Label(self.edit_window, font=("Times New Roman", 17), text="TRƯỞNG KHOA:", bg="white", fg="black")
+        lead_label = tk.Label(self.edit_window, font=("Arial", 17), text="TRƯỞNG KHOA:", bg="white", fg="black")
         lead_label.place(x=locationX, y=locationY + 3 * backUpLocationY)
-        student_label = tk.Label(self.edit_window, font=("Times New Roman", 17), text="SỐ LƯỢNG SINH VIÊN:", bg="white", fg="black")
+        student_label = tk.Label(self.edit_window, font=("Arial", 17), text="SỐ LƯỢNG SINH VIÊN:", bg="white", fg="black")
         student_label.place(x=locationX, y=locationY + 4 * backUpLocationY)
 
-        self.textSTTDepartment = tk.Entry(self.edit_window, font=("Times New Roman", 17), fg="black", width=30, borderwidth=1)
+        self.textSTTDepartment = tk.Entry(self.edit_window, font=("Arial", 17), fg="black", width=30, borderwidth=1)
         self.textSTTDepartment.place(x=locationEntry, y=locationY)
-        self.textIDDepartment = tk.Entry(self.edit_window, font=("Times New Roman", 17), fg="black", width=30, borderwidth=1)
+        self.textIDDepartment = tk.Entry(self.edit_window, font=("Arial", 17), fg="black", width=30, borderwidth=1)
         self.textIDDepartment.place(x=locationEntry, y=locationY + backUpLocationY)
-        self.textNameDepartment = tk.Entry(self.edit_window, font=("Times New Roman", 17), fg="black", width=30, borderwidth=1)
+        self.textNameDepartment = tk.Entry(self.edit_window, font=("Arial", 17), fg="black", width=30, borderwidth=1)
         self.textNameDepartment.place(x=locationEntry, y=locationY + 2 * backUpLocationY)
-        self.textLeadDepartment = tk.Entry(self.edit_window, font=("Times New Roman", 17), fg="black", width=30, borderwidth=1)
+        self.textLeadDepartment = tk.Entry(self.edit_window, font=("Arial", 17), fg="black", width=30, borderwidth=1)
         self.textLeadDepartment.place(x=locationEntry, y=locationY + 3 * backUpLocationY)
-        self.textStudentDepartment = tk.Entry(self.edit_window, font=("Times New Roman", 17), fg="black", width=30, borderwidth=1)
+        self.textStudentDepartment = tk.Entry(self.edit_window, font=("Arial", 17), fg="black", width=30, borderwidth=1)
         self.textStudentDepartment.place(x=locationEntry, y=locationY + 4 * backUpLocationY)
 
-        buttonUpdate = tk.Button(self.edit_window, text="Cập nhật", font=("Times New Roman", 18, "bold"),
+        buttonUpdate = tk.Button(self.edit_window, text="Cập nhật", font=("Arial", 18, "bold"),
                                 bg="black", fg="white", width=15, height=2, bd=0)
         buttonUpdate.place(x=300, y=locationY + 5 * backUpLocationY + 20)
 
@@ -187,7 +178,7 @@ class DepartmentGUI(tk.Tk):
         self.edit_window.configure(bg="white")
         self.edit_window.resizable(False, False)
 
-        title_label = tk.Label(self.edit_window, font=("Times New Roman", 25, "bold"),
+        title_label = tk.Label(self.edit_window, font=("Arial", 25, "bold"),
                             text="Chi tiết thông tin khoa", bg="white", fg="red")
         title_label.place(x=200, y=30)
 
@@ -196,29 +187,29 @@ class DepartmentGUI(tk.Tk):
         locationY = 100
         backUpLocationY = 70
 
-        stt_label = tk.Label(self.edit_window, font=("Times New Roman", 17), text="STT:", bg="white", fg="black")
+        stt_label = tk.Label(self.edit_window, font=("Arial", 17), text="STT:", bg="white", fg="black")
         stt_label.place(x=locationX, y=locationY)
-        id_label = tk.Label(self.edit_window, font=("Times New Roman", 17), text="MÃ KHOA:", bg="white", fg="black")
+        id_label = tk.Label(self.edit_window, font=("Arial", 17), text="MÃ KHOA:", bg="white", fg="black")
         id_label.place(x=locationX, y=locationY + backUpLocationY)
-        name_label = tk.Label(self.edit_window, font=("Times New Roman", 17), text="TÊN KHOA:", bg="white", fg="black")
+        name_label = tk.Label(self.edit_window, font=("Arial", 17), text="TÊN KHOA:", bg="white", fg="black")
         name_label.place(x=locationX, y=locationY + 2 * backUpLocationY)
-        lead_label = tk.Label(self.edit_window, font=("Times New Roman", 17), text="TRƯỞNG KHOA:", bg="white", fg="black")
+        lead_label = tk.Label(self.edit_window, font=("Arial", 17), text="TRƯỞNG KHOA:", bg="white", fg="black")
         lead_label.place(x=locationX, y=locationY + 3 * backUpLocationY)
-        student_label = tk.Label(self.edit_window, font=("Times New Roman", 17), text="SỐ LƯỢNG SINH VIÊN:", bg="white", fg="black")
+        student_label = tk.Label(self.edit_window, font=("Arial", 17), text="SỐ LƯỢNG SINH VIÊN:", bg="white", fg="black")
         student_label.place(x=locationX, y=locationY + 4 * backUpLocationY)
 
-        self.textSTTDepartment = tk.Entry(self.edit_window, font=("Times New Roman", 17), fg="black", width=30, borderwidth=1,state="readonly")
+        self.textSTTDepartment = tk.Entry(self.edit_window, font=("Arial", 17), fg="black", width=30, borderwidth=1,state="readonly")
         self.textSTTDepartment.place(x=locationEntry, y=locationY)
-        self.textIDDepartment = tk.Entry(self.edit_window, font=("Times New Roman", 17), fg="black", width=30, borderwidth=1,state="readonly")
+        self.textIDDepartment = tk.Entry(self.edit_window, font=("Arial", 17), fg="black", width=30, borderwidth=1,state="readonly")
         self.textIDDepartment.place(x=locationEntry, y=locationY + backUpLocationY)
-        self.textNameDepartment = tk.Entry(self.edit_window, font=("Times New Roman", 17), fg="black", width=30, borderwidth=1,state="readonly")
+        self.textNameDepartment = tk.Entry(self.edit_window, font=("Arial", 17), fg="black", width=30, borderwidth=1,state="readonly")
         self.textNameDepartment.place(x=locationEntry, y=locationY + 2 * backUpLocationY)
-        self.textLeadDepartment = tk.Entry(self.edit_window, font=("Times New Roman", 17), fg="black", width=30, borderwidth=1,state="readonly")
+        self.textLeadDepartment = tk.Entry(self.edit_window, font=("Arial", 17), fg="black", width=30, borderwidth=1,state="readonly")
         self.textLeadDepartment.place(x=locationEntry, y=locationY + 3 * backUpLocationY)
-        self.textStudentDepartment = tk.Entry(self.edit_window, font=("Times New Roman", 17), fg="black", width=30, borderwidth=1,state="readonly")
+        self.textStudentDepartment = tk.Entry(self.edit_window, font=("Arial", 17), fg="black", width=30, borderwidth=1,state="readonly")
         self.textStudentDepartment.place(x=locationEntry, y=locationY + 4 * backUpLocationY)
 
-        buttonUpdate = tk.Button(self.edit_window, text="Cập nhật thông tin mới cho khoa", font=("Times New Roman", 18, "bold"),
+        buttonUpdate = tk.Button(self.edit_window, text="Cập nhật thông tin mới cho khoa", font=("Arial", 18, "bold"),
                                 bg="black", fg="white", width=30, height=2, bd=0, command = self.update_department)
         buttonUpdate.place(x=200, y=locationY + 5 * backUpLocationY + 20)
 

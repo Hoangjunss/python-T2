@@ -5,7 +5,7 @@ import tkinter as tk
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from gui.DiemDanh import DiemDanh
-from gui.GiaoDientest import ScheduleManager
+from gui.DepartmentGUI import DepartmentGUI
 from gui.ListTeacher import Teacher_List
 from gui.StudentGUI import Student_List
 
@@ -71,7 +71,7 @@ class MainPage(tk.Tk):
     def DepartmentGUI(self):
         """Hiển thị giao diện Khoa."""
         self.clear_main_content()
-        self.current_page = ScheduleManager(self.main_content)  # Tạo giao diện mới
+        self.current_page = DepartmentGUI(self.main_content)  # Tạo giao diện mới
         self.current_page.pack(fill="both", expand=True)
 
     def DiemDanh(self):
