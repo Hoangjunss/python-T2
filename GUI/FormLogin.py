@@ -12,12 +12,13 @@ class FormLoginApp:
 
     @staticmethod
     def connect_database():
-        return mysql.connector.connect(
+        conn = mysql.connector.connect(
             host = "localhost",
             user = "root",
             password = "13524679",
             database = "student_information_management"
         )
+        return conn
 
     def update_password(self):
         try:
@@ -39,27 +40,34 @@ class FormLoginApp:
         username = self.userNameTeacher.get()
         password = self.passwordTeacher.get()
 
-        conn = self.connect_database()
-        cursor = conn.cursor()
+        try:
+            conn = self.connect_database()
+            cursor = conn.cursor(dictionary=True)
 
-        cursor.execute("SELECT * FROM TEACHER WHERE username=%s AND password=%s", (username, password))
-        result = cursor.fetchone()
+            cursor.execute("SELECT id FROM TEACHER WHERE username=%s AND password=%s", (username, password))
+            result = cursor.fetchone()
 
-        if result:
-            messagebox.showinfo("Thông báo", "Đăng nhập thành công")
-            print(f"Đăng nhập thành công.")
-            # Đóng form login
-            self.root.destroy()
-            # Mở MainPage
-            main_page = MainPage()
-            main_page.mainloop()
-        else:
-            messagebox.showerror("Lỗi", "Đăng nhập không thành công")
-            print(f"Đăng nhập không thành công.")
+            if result:
+                teacherId = result['id']
+                messagebox.showinfo("Thông báo", "Đăng nhập thành công")
+                print(f"Đăng nhập thành công.")
+                # Đóng form login
+                self.root.destroy()
+                # Mở MainPage
+                main_page = MainPage(teacherId)
+                main_page.mainloop()
+            else:
+                messagebox.showerror("Lỗi", "Đăng nhập không thành công")
+                print(f"Đăng nhập không thành công.")
 
-        cursor.close()
-        conn.close()
-
+        except mysql.connector.Error as e:
+            messagebox.showerror("Lỗi", f"Lỗi kết nối database: {str(e)}")
+            print(f"Lỗi kết nối database: {e}")
+        finally:
+            if 'cursor' in locals():
+                cursor.close()
+            if 'conn' in locals():
+                conn.close()
 
     def __init__(self, root):
         self.root = root

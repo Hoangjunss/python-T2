@@ -117,7 +117,7 @@ def get_by_class_id(class_id: int) -> list[Attendances]:
     return attendances
 
 @staticmethod
-def get_addtendent_by_time(time=None, departmentid=None, studentid=None) -> list[Attendances]:
+def get_addtendent_by_time(time=None, departmentid=None, studentid=None, teacherid=None) -> list[Attendances]:
     db = Database()
         
     if time:
@@ -126,6 +126,10 @@ def get_addtendent_by_time(time=None, departmentid=None, studentid=None) -> list
     else:
         sql = "SELECT id, class_id, student_id, status, checkin_time, scheduledetail_id FROM Attendances WHERE DATE(checkin_time) = CURDATE()"
         values = ()
+
+    if teacherid:
+        sql += " AND student_id IN (SELECT id FROM student WHERE teacherid = %s)"
+        values += (teacherid,)
 
     if departmentid:
         sql += " AND student_id IN (SELECT id FROM student WHERE departmentID = %s)"

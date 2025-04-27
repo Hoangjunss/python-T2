@@ -9,7 +9,7 @@ from tkcalendar import DateEntry
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from dao import AttendancesDAO, ClassDAO, DepartmentDAO, StudentDAO
+from dao import AttendancesDAO, ClassDAO, DepartmentDAO, StudentDAO, TeacherDAO
 import datetime
 import time
 from datetime import datetime
@@ -19,12 +19,13 @@ from dao.TestDAO import TestDAO
 from models.Students import Student
 from models.Attendances import Attendances
 class DiemDanh(tk.Frame):
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, teacherId=None):
         super().__init__(parent)
         self.parent = parent
         self.time= datetime.today()
+        self.teacherId = teacherId
         self.DiemDanh()
-        self.refresh_list(self.time)
+        self.refresh_list(self.time, self.teacherId)
 
     def DiemDanh(self):
 
@@ -83,13 +84,14 @@ class DiemDanh(tk.Frame):
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
 
-    def refresh_list(self,time):
+    def refresh_list(self,time, teacherId):
         # Xóa hết nội dung hiện tại
         for item in self.tree.get_children():
             self.tree.delete(item)
         i=1
+        teacher = TeacherDAO.get_by_id(teacherId)
         try:
-            attendance = AttendancesDAO.get_addtendent_by_time(time)
+            attendance = AttendancesDAO.get_addtendent_by_time(time=time, departmentid=teacher.department_id)
             for at in attendance:
                 student_info = StudentDAO.get_by_id(at.student_id)
                 self.tree.insert("", "end", values=(

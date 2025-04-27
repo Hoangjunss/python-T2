@@ -11,8 +11,11 @@ from gui.StudentGUI import Student_List
 
 
 class MainPage(tk.Tk):
-    def __init__(self):
+    def __init__(self, teacherId=None):
         super().__init__()
+        self.teacherId = teacherId
+        if self.teacherId:
+            print(f"Teacher ID: {self.teacherId}")
         self.title("Student Management System")
         self.geometry("1050x700")
 
@@ -77,7 +80,7 @@ class MainPage(tk.Tk):
     def DiemDanh(self):
         """Hiển thị giao diện Điểm Danh."""
         self.clear_main_content()
-        self.current_page = DiemDanh(self.main_content)
+        self.current_page = DiemDanh(self.main_content, self.teacherId)
         self.current_page.pack(fill="both", expand=True)
 
     def quit_program(self):
