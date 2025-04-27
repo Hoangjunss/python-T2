@@ -5,6 +5,7 @@ import sys
 import os
 import cv2,os
 import pandas as pd
+from tkcalendar import DateEntry
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
@@ -34,6 +35,23 @@ class DiemDanh(tk.Frame):
 
         btn_diem_danh = tk.Button(frame_top, text="Điểm danh nhe",width=20, command= self.diem_danh)
         btn_diem_danh.pack(side=tk.RIGHT, padx=10, pady=10)
+        # Tạo frame để chứa các widget liên quan đến ngày
+        date_frame = tk.Frame(frame_top)
+        date_frame.pack(pady=20)
+
+        selectDate = tk.Label(date_frame, text="Chọn ngày:", font=("Times New Roman", 25))
+        selectDate.pack(side=tk.LEFT, padx=10)
+
+        dateEntry = DateEntry(date_frame, width=13, background='white', foreground='black', borderwidth=2, font=("Times New Roman", 15))
+        dateEntry.pack(side=tk.LEFT, padx=10)
+
+        def getValueTime():
+            selected_date = dateEntry.get_date()
+            print(f"Selected date: {selected_date}")
+            # Add your logic here to handle the selected date
+
+        buttonGetValueTime = tk.Button(date_frame, text="In ra màn hình giá trị ngày-tháng-năm", font=("Times New Roman", 20), command=getValueTime)
+        buttonGetValueTime.pack(side=tk.LEFT, padx=10)
 
         #Phần dưới (bảng và các nút)
         frame_bottom = tk.Frame(self)
