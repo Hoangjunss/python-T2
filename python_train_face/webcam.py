@@ -1,3 +1,5 @@
+from datetime import datetime
+from tkinter import messagebox
 import uuid
 import cv2
 import numpy as np
@@ -89,8 +91,9 @@ def save_to_db(name, confidence):
     print(f"Lưu vào DB: {name} - {confidence:.2f}")
     name_student, student_id = name.split('_')
     student= StudentDAO.get_by_id(student_id)
+    currdate = datetime.now()
     if student:
-        attendance = Attendances(id=generate_unique_id(),student_id=student.id,scheduledetail_id=1, status=1)
+        attendance = Attendances(id=generate_unique_id(),student_id=student.id,checkin_time=currdate,scheduledetail_id=1, status=1)
         AttendancesDAO.save(attendance)
        
     

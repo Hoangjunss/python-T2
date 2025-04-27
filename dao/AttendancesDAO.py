@@ -1,14 +1,33 @@
 from database.ConnectDB import Database
+from dto.StudentAttendenceDTO import StudentAttendenceDTO
 from models.Attendances import Attendances
 
 @staticmethod
 def save(attendances: Attendances):
     db = Database()
-    class_id = db.fetch_one("SELECT class_id FROM Student WHERE id = %s", (attendances.student_id,))
-    sql = "INSERT INTO Attendances(id, class_id, student_id, scheduledetail_id, status, checkin_time) VALUES (%s, %s, %s, %s, %s, %s)"
-    values = (attendances.id, class_id, attendances.student_id, attendances.scheduledetail_id, attendances.status, attendances.checkin_time)
+
+
+    class_id_row = db.fetch_one(
+        "SELECT class_id FROM Student WHERE id = %s", (attendances.student_id,)
+    )
+    class_id = class_id_row["class_id"] if class_id_row else None
+
+    sql = """
+        INSERT INTO Attendances (id, class_id, student_id, scheduledetail_id, status, checkin_time)
+        VALUES (%s, %s, %s, %s, %s, %s)
+    """
+    values = (
+        attendances.id,
+        class_id,
+        attendances.student_id,
+        attendances.scheduledetail_id,
+        attendances.status,
+        attendances.checkin_time,
+    )
+
     db.exec_query(sql, values)
     db.close()
+
 
 @staticmethod
 def update(attendances: Attendances):
@@ -98,7 +117,7 @@ def get_by_class_id(class_id: int) -> list[Attendances]:
     return attendances
 
 @staticmethod
-def get_addtendent_by_time(time=None, classid=None, studentid=None) -> list[Attendances]:
+def get_addtendent_by_time(time=None, departmentid=None, studentid=None) -> list[Attendances]:
     db = Database()
         
     if time:
@@ -108,9 +127,9 @@ def get_addtendent_by_time(time=None, classid=None, studentid=None) -> list[Atte
         sql = "SELECT id, class_id, student_id, status, checkin_time, scheduledetail_id FROM Attendances WHERE DATE(checkin_time) = CURDATE()"
         values = ()
 
-    if classid:
-        sql += " AND class_id = %s"
-        values += (classid,)
+    if departmentid:
+        sql += " AND student_id IN (SELECT id FROM student WHERE departmentID = %s)"
+        values += (departmentid,)
 
     if studentid:
         sql += " AND student_id = %s"
@@ -132,3 +151,41 @@ def get_addtendent_by_time(time=None, classid=None, studentid=None) -> list[Atte
         return []
     finally:
         db.close()
+
+@staticmethod
+def count_attendance_by_time(time=None, departmentid=None,) -> int:
+    db = Database()
+    if time:
+        sql = "SELECT COUNT(*) as total_student FROM attendances WHERE DATE(checkin_time) = DATE(%s)"
+        values = (time,)
+    else:
+        sql = "SELECT COUNT(*) as total_student FROM attendances WHERE DATE(checkin_time) = CURDATE()"
+        values = ()
+    if departmentid:
+        sql += " AND student_id IN (SELECT id FROM student WHERE departmentID = %s)"
+        values += (departmentid,)
+    result = db.fetch_one(sql, values)
+    if result:
+        db.close()
+        return result['total_student']
+    else:
+        db.close()
+        return None
+        
+
+@staticmethod
+def get_attendance_list(time=None) -> list[StudentAttendenceDTO]:
+    db = Database()
+    if time:
+        sql = "SELECT s.id, s.fullname, a.checkin_time, d.name as department_name FROM student s INNER JOIN attendances a ON s.id = a.student_id INNER JOIN department d ON s.`departmentID` = d.id WHERE DATE(a.checkin_time) = DATE(%s) ORDER BY a.checkin_time DESC"
+        values = (time,)
+    else:   
+        sql = "SELECT s.id, s.fullname, a.checkin_time, d.name as department_name FROM student s INNER JOIN attendances a ON s.id = a.student_id INNER JOIN department d ON s.`departmentID` = d.id WHERE DATE(a.checkin_time) = CURDATE() ORDER BY a.checkin_time DESC"
+        values = ()
+    result = db.fetch_all(sql, values)
+    student_attendance_list = []
+    for row in result:
+        student_attendance_list.append(StudentAttendenceDTO(row['id'], row['fullname'], row['checkin_time'], row['department_name']))
+    db.close()
+    return student_attendance_list
+

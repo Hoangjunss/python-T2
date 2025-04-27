@@ -15,7 +15,7 @@ class FormLoginApp:
         return mysql.connector.connect(
             host = "localhost",
             user = "root",
-            password = "12122004",
+            password = "13524679",
             database = "student_information_management"
         )
 
@@ -123,7 +123,7 @@ class FormLoginApp:
 
     def build_teacher_frame(self, w, h):
         frame = self.frames["teacher"]
-        self.update_password()
+        #self.update_password()
 
         bg = Image.open(r"Dataset/image_form/imgForm.jpg")
         bg = bg.resize((w, h), Image.Resampling.LANCZOS)

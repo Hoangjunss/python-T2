@@ -29,35 +29,23 @@ class DiemDanhSinhVien(tk.Tk):
         
     def load_attendance_data(self):
         try:
-            # Lấy dữ liệu từ DAO
-            attendances = AttendancesDAO.get_all()
+            # Lấy dữ liệu từ DAO sử dụng StudentAttendenceDTO
+            attendances = AttendancesDAO.get_attendance_list()
             
             # Xóa dữ liệu cũ trong bảng
             for item in self.table.get_children():
                 self.table.delete(item)
                 
             # Thêm dữ liệu mới vào bảng
-            for i, attendance in enumerate(attendances, 1):
-                # Format ngày sinh
-                dob = attendance.student.date_of_birth.strftime('%d/%m/%Y') if attendance.student.date_of_birth else ''
-                
+            for attendance in attendances:
                 # Format thời gian điểm danh
                 checkin_time = attendance.checkin_time.strftime('%H:%M:%S %d/%m/%Y') if attendance.checkin_time else ''
-                    
-                # Format giới tính
-                gender = 'Nam' if attendance.student.gender == 1 else 'Nữ' if attendance.student.gender == 0 else ''
-                
-                # Format trạng thái
-                status = 'Có mặt' if attendance.status == 1 else 'Vắng mặt' if attendance.status == 0 else 'Điểm danh muộn'
                 
                 self.table.insert('', 'end', values=(
-                    i,
-                    attendance.student.student_id,
-                    attendance.student.full_name,
-                    dob,
-                    gender,
+                    attendance.id,
+                    attendance.fullname,
                     checkin_time,
-                    status
+                    attendance.class_name
                 ))
                 
         except Exception as e:
@@ -88,16 +76,31 @@ class DiemDanhSinhVien(tk.Tk):
         )
         self.title_label.place(x=50, y=50)
         
+        # Frame chứa các nút
+        self.button_frame = tk.Frame(self.main_frame)
+        self.button_frame.pack(pady=20)
+        
         # Nút điểm danh
         self.attendance_button = tk.Button(
-            self.main_frame,
+            self.button_frame,
             text="Điểm danh", 
             font=("Times New Roman", 25, "bold"), 
             bg="white", 
             fg="black",
             command=self.diem_danh
         )
-        self.attendance_button.pack(padx=100, pady=50)
+        self.attendance_button.pack(side=tk.LEFT, padx=10)
+        
+        # Nút refresh
+        self.refresh_button = tk.Button(
+            self.button_frame,
+            text="Làm mới", 
+            font=("Times New Roman", 25, "bold"), 
+            bg="#2ecc71", 
+            fg="white",
+            command=self.refresh_data
+        )
+        self.refresh_button.pack(side=tk.LEFT, padx=10)
         
         # Bảng dữ liệu
         self.create_table()
@@ -106,27 +109,21 @@ class DiemDanhSinhVien(tk.Tk):
         # Tạo bảng
         self.table = ttk.Treeview(
             self.main_frame, 
-            columns=("STT", "MSSV", "Họ và tên", "Ngày sinh", "Giới tính", "Thời gian", "Trạng thái"), 
+            columns=("ID", "Họ và tên", "Thời gian điểm danh", "Lớp"), 
             show="headings"
         )
         
         # Thiết lập các cột
-        self.table.heading("STT", text="STT")
-        self.table.heading("MSSV", text="MSSV")
+        self.table.heading("ID", text="ID")
         self.table.heading("Họ và tên", text="Họ và tên")
-        self.table.heading("Ngày sinh", text="Ngày sinh")
-        self.table.heading("Giới tính", text="Giới tính")
-        self.table.heading("Thời gian", text="Thời gian")
-        self.table.heading("Trạng thái", text="Trạng thái")
+        self.table.heading("Thời gian điểm danh", text="Thời gian điểm danh")
+        self.table.heading("Lớp", text="Lớp")
         
         # Thiết lập độ rộng cột
-        self.table.column("STT", width=100, anchor="center")
-        self.table.column("MSSV", width=100, anchor="center")
-        self.table.column("Họ và tên", width=170, anchor="center")
-        self.table.column("Ngày sinh", width=100, anchor="center")
-        self.table.column("Giới tính", width=100, anchor="center")
-        self.table.column("Thời gian", width=150, anchor="center")
-        self.table.column("Trạng thái", width=150, anchor="center")
+        self.table.column("ID", width=100, anchor="center")
+        self.table.column("Họ và tên", width=200, anchor="center")
+        self.table.column("Thời gian điểm danh", width=200, anchor="center")
+        self.table.column("Lớp", width=150, anchor="center")
         
         # Hiển thị bảng
         self.table.pack(expand=True, fill="both")
@@ -135,6 +132,10 @@ class DiemDanhSinhVien(tk.Tk):
         """Mở camera để điểm danh"""
         webcam.detect_face_from_webcam_mtcnn()
         # Sau khi đóng camera, cập nhật dữ liệu điểm danh
+        self.load_attendance_data()
+        
+    def refresh_data(self):
+        """Làm mới dữ liệu điểm danh"""
         self.load_attendance_data()
         
     def go_back(self):
