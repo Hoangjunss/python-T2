@@ -15,7 +15,7 @@ class FormLoginApp:
         return mysql.connector.connect(
             host = "localhost",
             user = "root",
-            password = "13524679",
+            password = "12122004",
             database = "student_information_management"
         )
 

@@ -22,19 +22,16 @@ class DiemDanh(tk.Frame):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.parent = parent
+        self.time= datetime.now()
         self.DiemDanh()
-        self.refresh_list()
+        self.refresh_list(self.time)
 
     def DiemDanh(self):
 
         frame_top = tk.Frame(self)
         frame_top.pack(fill=tk.X, padx=10, pady=10)
 
-        label_title = tk.Label(frame_top, text="Điểm danh", font=("Arial", 14, 'bold'))
-        label_title.pack(anchor="w")
-
-        btn_diem_danh = tk.Button(frame_top, text="Điểm danh nhe",width=20, command= self.diem_danh)
-        btn_diem_danh.pack(side=tk.RIGHT, padx=10, pady=10)
+        
         # Tạo frame để chứa các widget liên quan đến ngày
         date_frame = tk.Frame(frame_top)
         date_frame.pack(pady=20)
@@ -47,10 +44,11 @@ class DiemDanh(tk.Frame):
 
         def getValueTime():
             selected_date = dateEntry.get_date()
+            self.refresh_list(selected_date)                            
             print(f"Selected date: {selected_date}")
             # Add your logic here to handle the selected date
 
-        buttonGetValueTime = tk.Button(date_frame, text="In ra màn hình giá trị ngày-tháng-năm", font=("Times New Roman", 20), command=getValueTime)
+        buttonGetValueTime = tk.Button(date_frame, text="chọn", font=("Times New Roman", 12), command=getValueTime)
         buttonGetValueTime.pack(side=tk.LEFT, padx=10)
 
         #Phần dưới (bảng và các nút)
@@ -85,13 +83,13 @@ class DiemDanh(tk.Frame):
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
 
-    def refresh_list(self):
+    def refresh_list(self,time):
         # Xóa hết nội dung hiện tại
         for item in self.tree.get_children():
             self.tree.delete(item)
         i=1
         try:
-            attendance = AttendancesDAO.get_all()
+            attendance = AttendancesDAO.get_addtendent_by_time(time)
             for at in attendance:
                 student_info = StudentDAO.get_by_id(at.student_id)
                 self.tree.insert("", "end", values=(
