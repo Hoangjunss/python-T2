@@ -36,12 +36,11 @@ class MainPage(tk.Tk):
 
         # Nút menu
         self.menu_buttons = [
-            # ("🏫 Danh sách SV", self.show_student_list),
-            ("➕ Sinh viên", self.StudentGUI),
-            ("👩‍🏫 Giáo viên", self.TeacherGUI),
+            ("Sinh viên", self.StudentGUI),
+            ("Giáo viên", self.TeacherGUI),
             ("Khoa", self.DepartmentGUI),
-            ("🗓️ Điểm danh", self.DiemDanh),
-            ("🚪 Thoát", self.quit_program)
+            ("Điểm danh", self.DiemDanh),
+            ("Thoát", self.quit_program)
         ]
 
         for text, command in self.menu_buttons:
