@@ -9,7 +9,7 @@ import cv2,os
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from dao import ClassDAO, DepartmentDAO, StudentDAO 
+from dao import AttendancesDAO, ClassDAO, DepartmentDAO, FaceendcodingDAO, StudentDAO 
 from gui.UI import AddStudentGUI
 from models.Students import Student
 
@@ -164,6 +164,8 @@ class Student_List(tk.Frame):
             confirm = messagebox.askyesno("Xác nhận xóa", f"Bạn có chắc chắn muốn xóa sinh viên tên {name_student} không?")
             if confirm:
                 try:
+                    AttendancesDAO.delete_by_student_id(student_id)  # Xóa điểm danh của sinh viên
+                    FaceendcodingDAO.delete_by_student_id(student_id)  # Xóa dữ liệu khuôn mặt của sinh viên
                     StudentDAO.delete(student_id)
                     self.refresh_student_list()
                     messagebox.showinfo("Thông báo", "Xóa thành công.")

@@ -45,7 +45,7 @@ class DiemDanh(tk.Frame):
 
         def getValueTime():
             selected_date = dateEntry.get_date()
-            self.refresh_list(selected_date)                            
+            self.refresh_list(selected_date, self.teacherId)                            
             print(f"Selected date: {selected_date}")
             # Add your logic here to handle the selected date
 
@@ -90,9 +90,12 @@ class DiemDanh(tk.Frame):
             self.tree.delete(item)
         i=1
         teacher = TeacherDAO.get_by_id(teacherId)
+        print(teacher)
         try:
             attendance = AttendancesDAO.get_addtendent_by_time(time=time, departmentid=teacher.department_id)
+            print(attendance)
             for at in attendance:
+                print(3)
                 student_info = StudentDAO.get_by_id(at.student_id)
                 self.tree.insert("", "end", values=(
                     i,
@@ -170,7 +173,7 @@ class DiemDanh(tk.Frame):
         attendances=Attendances(id=546123, class_id=student.class_id, student_id=student.id, status="Điểm danh thành công", checkin_time=formatted_time, scheduledetail_id= 4)
         AttendancesDAO.save(attendances=attendances)
         cv2.destroyAllWindows()
-        self.refresh_list()
+        self.refresh_list(self.time, self.teacherId)
           
 if __name__ == '__main__':
     app = DiemDanh()

@@ -46,6 +46,14 @@ def delete(id: int):
     db.close()
 
 @staticmethod
+def delete_by_student_id(student_id: int):
+    db = Database()
+    sql = "DELETE FROM Attendances WHERE student_id=%s"
+    values = (student_id,)
+    db.exec_query(sql, values)
+    db.close()
+
+@staticmethod
 def get_all() -> list[Attendances]:
     db = Database()
     sql = "SELECT id, class_id, student_id, status, checkin_time, scheduledetail_id FROM attendances"

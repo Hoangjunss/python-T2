@@ -15,8 +15,8 @@ from models.Attendances import Attendances
 IMG_SIZE = 160
 # Get the directory of the current file
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
-MODEL_PATH = os.path.join(CURRENT_DIR, "face_recognition_model.h5")
-LABEL_PATH = os.path.join(CURRENT_DIR, "labels.npy")
+MODEL_PATH = os.path.join(CURRENT_DIR, "../face_recognition_model.h5")
+LABEL_PATH = os.path.join(CURRENT_DIR, "../labels.npy")
 
 # Load model đã train
 model = tf.keras.models.load_model(MODEL_PATH)
