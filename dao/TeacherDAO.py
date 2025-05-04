@@ -113,3 +113,25 @@ def get_by_username_and_password(username: str, password: str) -> Teacher:
         )
     return None
 
+
+@staticmethod
+def get_by_department_id(department_id: int) -> list[Teacher]:
+    db = Database()
+    query = "SELECT id, fullname, gender, status, address, email, phone, username, password FROM teacher WHERE department_id=%s"
+    values = (department_id,)
+    result = db.fetch_all(query, values)
+    teachers = []
+    for row in result:
+        teachers.append(Teacher(
+            id=row['id'],
+            fullname=row['fullname'],
+            gender=row['gender'],
+            status=row['status'],
+            address=row['address'],
+            email=row['email'],
+            phone=row['phone'],
+            username=row['username'],
+            password=row['password']
+        ))
+    db.close()
+    return teachers

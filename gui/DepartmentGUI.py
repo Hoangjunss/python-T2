@@ -6,7 +6,7 @@ import uuid
 
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from dao import DepartmentDAO
+from dao import DepartmentDAO, TeacherDAO
 from models.Department import Department
 
 class DepartmentGUI(tk.Frame):
@@ -124,6 +124,12 @@ class DepartmentGUI(tk.Frame):
         add_button.pack(pady=20)
 
     def update_department(self):
+        selected_item = self.tree.selection()
+        if not selected_item:
+            return
+        
+        department_id = self.tree.item(selected_item[0])["values"][1]
+
         self.edit_window = tk.Toplevel(self)
         self.edit_window.title("Sửa thông tin khoa")
         self.edit_window.geometry("800x600")
@@ -139,30 +145,54 @@ class DepartmentGUI(tk.Frame):
         locationY = 100
         backUpLocationY = 70
 
-        stt_label = tk.Label(self.edit_window, font=("Arial", 17), text="STT:", bg="white", fg="black")
-        stt_label.place(x=locationX, y=locationY)
-        id_label = tk.Label(self.edit_window, font=("Arial", 17), text="MÃ KHOA:", bg="white", fg="black")
-        id_label.place(x=locationX, y=locationY + backUpLocationY)
         name_label = tk.Label(self.edit_window, font=("Arial", 17), text="TÊN KHOA:", bg="white", fg="black")
         name_label.place(x=locationX, y=locationY + 2 * backUpLocationY)
         lead_label = tk.Label(self.edit_window, font=("Arial", 17), text="TRƯỞNG KHOA:", bg="white", fg="black")
         lead_label.place(x=locationX, y=locationY + 3 * backUpLocationY)
-        student_label = tk.Label(self.edit_window, font=("Arial", 17), text="SỐ LƯỢNG SINH VIÊN:", bg="white", fg="black")
-        student_label.place(x=locationX, y=locationY + 4 * backUpLocationY)
 
-        self.textSTTDepartment = tk.Entry(self.edit_window, font=("Arial", 17), fg="black", width=30, borderwidth=1)
-        self.textSTTDepartment.place(x=locationEntry, y=locationY)
-        self.textIDDepartment = tk.Entry(self.edit_window, font=("Arial", 17), fg="black", width=30, borderwidth=1)
-        self.textIDDepartment.place(x=locationEntry, y=locationY + backUpLocationY)
+        teacher_list = TeacherDAO.get_by_department_id(department_id)
+        teacher_names = [f"{teacher.fullname} ({teacher.id})" for teacher in teacher_list]
+
         self.textNameDepartment = tk.Entry(self.edit_window, font=("Arial", 17), fg="black", width=30, borderwidth=1)
         self.textNameDepartment.place(x=locationEntry, y=locationY + 2 * backUpLocationY)
-        self.textLeadDepartment = tk.Entry(self.edit_window, font=("Arial", 17), fg="black", width=30, borderwidth=1)
-        self.textLeadDepartment.place(x=locationEntry, y=locationY + 3 * backUpLocationY)
-        self.textStudentDepartment = tk.Entry(self.edit_window, font=("Arial", 17), fg="black", width=30, borderwidth=1)
-        self.textStudentDepartment.place(x=locationEntry, y=locationY + 4 * backUpLocationY)
+        self.textNameDepartment.insert(0, str(self.tree.item(selected_item[0])["values"][2]))
 
-        buttonUpdate = tk.Button(self.edit_window, text="Cập nhật", font=("Arial", 18, "bold"),
-                                bg="black", fg="white", width=15, height=2, bd=0)
+        self.chooseLeadDepartment = ttk.Combobox(self.edit_window, values=teacher_names, font=("Arial", 17), state="readonly")
+        department_temp = DepartmentDAO.get_by_id(department_id)
+        self.chooseLeadDepartment.set(
+            "Chọn trưởng khoa" if not department_temp.dean_id else 
+            next((name for name in teacher_names if str(department_temp.dean_id) in name), department_temp.dean_id)
+        )
+        self.chooseLeadDepartment.place(x=locationEntry, y=locationY + 3 * backUpLocationY)
+        
+        def updated_department():
+            name = self.textNameDepartment.get().strip()
+            lead = self.chooseLeadDepartment.get().strip()
+
+            if not name:
+                messagebox.showwarning("Thiếu thông tin", "Vui lòng nhập đầy đủ thông tin.")
+                return
+
+            if lead == "Chọn trưởng khoa":
+                lead_id = None
+                print(lead_id)
+            else:
+                # Lấy ID trưởng khoa từ tên đã chọn
+                lead_id = int(lead.split("(")[1].split(")")[0])
+
+            print(lead_id)
+            department = Department(
+                id=department_id,
+                name=name,
+                dean_id=lead_id
+            )
+
+            DepartmentDAO.update(department)
+            messagebox.showinfo("Thành công", "Cập nhật thông tin khoa thành công.")
+            self.edit_window.destroy()
+            self.refresh_department_list()
+
+        buttonUpdate = tk.Button(self.edit_window, text="Cập nhật", font=("Arial", 18, "bold"), command=updated_department)
         buttonUpdate.place(x=300, y=locationY + 5 * backUpLocationY + 20)
 
             # Sự kiện hover vào button
@@ -171,9 +201,19 @@ class DepartmentGUI(tk.Frame):
             # Sự kiện rời khỏi button
         buttonUpdate.bind("<Leave>", lambda e:buttonUpdate.config(bg="black", fg="white"))
 
+        
+
     def detail_department(self):
+        selected_item = self.tree.selection()
+        if not selected_item:
+            return
+        department_id = self.tree.item(selected_item[0])["values"][1]
+        department_temp = DepartmentDAO.get_by_id(department_id)
+        if not department_temp:
+            messagebox.showerror("Error", "Không tìm thấy khoa.")
+            return
         self.edit_window = tk.Toplevel(self)
-        self.edit_window.title("Sửa thông tin khoa")
+        self.edit_window.title("Thông tin khoa")
         self.edit_window.geometry("800x600")
         self.edit_window.configure(bg="white")
         self.edit_window.resizable(False, False)
@@ -189,25 +229,48 @@ class DepartmentGUI(tk.Frame):
 
         stt_label = tk.Label(self.edit_window, font=("Arial", 17), text="STT:", bg="white", fg="black")
         stt_label.place(x=locationX, y=locationY)
+
         id_label = tk.Label(self.edit_window, font=("Arial", 17), text="MÃ KHOA:", bg="white", fg="black")
         id_label.place(x=locationX, y=locationY + backUpLocationY)
+
         name_label = tk.Label(self.edit_window, font=("Arial", 17), text="TÊN KHOA:", bg="white", fg="black")
         name_label.place(x=locationX, y=locationY + 2 * backUpLocationY)
+        
         lead_label = tk.Label(self.edit_window, font=("Arial", 17), text="TRƯỞNG KHOA:", bg="white", fg="black")
         lead_label.place(x=locationX, y=locationY + 3 * backUpLocationY)
         student_label = tk.Label(self.edit_window, font=("Arial", 17), text="SỐ LƯỢNG SINH VIÊN:", bg="white", fg="black")
         student_label.place(x=locationX, y=locationY + 4 * backUpLocationY)
 
+
         self.textSTTDepartment = tk.Entry(self.edit_window, font=("Arial", 17), fg="black", width=30, borderwidth=1,state="readonly")
         self.textSTTDepartment.place(x=locationEntry, y=locationY)
+        self.textSTTDepartment.insert(0, str(self.tree.item(selected_item[0])["values"][0]))
+        
+        
+
         self.textIDDepartment = tk.Entry(self.edit_window, font=("Arial", 17), fg="black", width=30, borderwidth=1,state="readonly")
         self.textIDDepartment.place(x=locationEntry, y=locationY + backUpLocationY)
+        self.textIDDepartment.insert(0, str(self.tree.item(selected_item[0])["values"][1]))
+        
+
+        
         self.textNameDepartment = tk.Entry(self.edit_window, font=("Arial", 17), fg="black", width=30, borderwidth=1,state="readonly")
         self.textNameDepartment.place(x=locationEntry, y=locationY + 2 * backUpLocationY)
+        self.textNameDepartment.insert(0, str(self.tree.item(selected_item[0])["values"][2]))
+        
+
         self.textLeadDepartment = tk.Entry(self.edit_window, font=("Arial", 17), fg="black", width=30, borderwidth=1,state="readonly")
         self.textLeadDepartment.place(x=locationEntry, y=locationY + 3 * backUpLocationY)
+        teacher_lead = TeacherDAO.get_by_id(department_temp.dean_id)
+        self.textLeadDepartment.insert(0, f"{teacher_lead.fullname}")
+        
+        
         self.textStudentDepartment = tk.Entry(self.edit_window, font=("Arial", 17), fg="black", width=30, borderwidth=1,state="readonly")
+        self.textStudentDepartment.insert(0, str(self.tree.item(selected_item[0])["values"][3]))
         self.textStudentDepartment.place(x=locationEntry, y=locationY + 4 * backUpLocationY)
+
+        
+
 
         buttonUpdate = tk.Button(self.edit_window, text="Cập nhật thông tin mới cho khoa", font=("Arial", 18, "bold"),
                                 bg="black", fg="white", width=30, height=2, bd=0, command = self.update_department)
