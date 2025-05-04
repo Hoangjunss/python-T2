@@ -6,19 +6,12 @@ from models.Attendances import Attendances
 def save(attendances: Attendances):
     db = Database()
 
-
-    class_id_row = db.fetch_one(
-        "SELECT class_id FROM Student WHERE id = %s", (attendances.student_id,)
-    )
-    class_id = class_id_row["class_id"] if class_id_row else None
-
     sql = """
-        INSERT INTO Attendances (id, class_id, student_id, scheduledetail_id, status, checkin_time)
-        VALUES (%s, %s, %s, %s, %s, %s)
+        INSERT INTO Attendances (id, student_id, scheduledetail_id, status, checkin_time)
+        VALUES (%s, %s, %s, %s, %s)
     """
     values = (
         attendances.id,
-        class_id,
         attendances.student_id,
         attendances.scheduledetail_id,
         attendances.status,
@@ -32,8 +25,8 @@ def save(attendances: Attendances):
 @staticmethod
 def update(attendances: Attendances):
     db = Database()
-    sql = "UPDATE Attendances SET class_id=%s, student_id=%s, status=%s, checkin_time=%s WHERE id=%s"
-    values = (attendances.class_id, attendances.student_id, attendances.status, attendances.checkin_time, attendances.id)
+    sql = "UPDATE Attendances SET  student_id=%s, status=%s, checkin_time=%s WHERE id=%s"
+    values = (attendances.student_id, attendances.status, attendances.checkin_time, attendances.id)
     db.exec_query(sql, values)
     db.close()
 
@@ -56,13 +49,12 @@ def delete_by_student_id(student_id: int):
 @staticmethod
 def get_all() -> list[Attendances]:
     db = Database()
-    sql = "SELECT id, class_id, student_id, status, checkin_time, scheduledetail_id FROM attendances"
+    sql = "SELECT id, student_id, status, checkin_time, scheduledetail_id FROM attendances"
     result = db.fetch_all(sql)
     attendances = []
     for row in result:
         attendances.append(Attendances(
             id=row['id'],
-            class_id=row['class_id'],
             student_id=row['student_id'],
             status=row['status'],
             checkin_time=row['checkin_time'],
@@ -74,13 +66,12 @@ def get_all() -> list[Attendances]:
 @staticmethod
 def get_by_id(id: int) -> Attendances:
     db = Database()
-    sql = "SELECT id, class_id, student_id, status, checkin_time, scheduledetail_id FROM Attendances WHERE id=%s"
+    sql = "SELECT id,  student_id, status, checkin_time, scheduledetail_id FROM Attendances WHERE id=%s"
     result = db.fetch_one(sql, (id,))
     if result:
         db.close()
         return Attendances(
             id=result['id'],
-            class_id=result['class_id'],
             student_id=result['student_id'],
             status=result['status'],
             checkin_time=result['checkin_time'],
@@ -92,13 +83,12 @@ def get_by_id(id: int) -> Attendances:
 @staticmethod
 def get_by_student_id(student_id: int) -> list[Attendances]:
     db = Database()
-    sql = "SELECT id, class_id, student_id, status, checkin_time, scheduledetail_id FROM Attendances WHERE student_id=%s"
+    sql = "SELECT id,  student_id, status, checkin_time, scheduledetail_id FROM Attendances WHERE student_id=%s"
     result = db.fetch_all(sql, (student_id,))
     attendances = []
     for row in result:
         attendances.append(Attendances(
             id=row['id'],
-            class_id=row['class_id'],
             student_id=row['student_id'],
             status=row['status'],
             checkin_time=row['checkin_time'],
@@ -129,10 +119,10 @@ def get_addtendent_by_time(time=None, departmentid=None, studentid=None, teacher
     db = Database()
         
     if time:
-        sql = "SELECT id, class_id, student_id, status, checkin_time, scheduledetail_id FROM Attendances WHERE DATE(checkin_time) = DATE(%s)"
+        sql = "SELECT id, student_id, status, checkin_time, scheduledetail_id FROM Attendances WHERE DATE(checkin_time) = DATE(%s)"
         values = (time,)
     else:
-        sql = "SELECT id, class_id, student_id, status, checkin_time, scheduledetail_id FROM Attendances WHERE DATE(checkin_time) = CURDATE()"
+        sql = "SELECT id, student_id, status, checkin_time, scheduledetail_id FROM Attendances WHERE DATE(checkin_time) = CURDATE()"
         values = ()
 
     if teacherid:
@@ -151,7 +141,6 @@ def get_addtendent_by_time(time=None, departmentid=None, studentid=None, teacher
         result = db.fetch_all(sql, values)
         attendances = [Attendances(
             id=row['id'],
-            class_id=row['class_id'],
             student_id=row['student_id'],
             status=row['status'],
             checkin_time=row['checkin_time'],

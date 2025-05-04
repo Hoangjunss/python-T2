@@ -170,7 +170,7 @@ class DiemDanh(tk.Frame):
                 break
             
         cam.release()
-        attendances=Attendances(id=546123, class_id=student.class_id, student_id=student.id, status="Điểm danh thành công", checkin_time=formatted_time, scheduledetail_id= 4)
+        attendances=Attendances(id=546123,  student_id=student.id, status="Điểm danh thành công", checkin_time=formatted_time, scheduledetail_id= 4)
         AttendancesDAO.save(attendances=attendances)
         cv2.destroyAllWindows()
         self.refresh_list(self.time, self.teacherId)
