@@ -11,8 +11,7 @@ class Student:
                  ethnicity=None, 
                  religion=None, 
                  nationality=None,
-                 departmentId=None,
-                 class_id=None):
+                 departmentId=None):
         self.id = id
         self.fullname = fullname
         self.gender = gender
@@ -24,12 +23,11 @@ class Student:
         self.religion = religion
         self.nationality = nationality
         self.departmentId = departmentId
-        self.class_id = class_id
 
     def __str__(self):
         return (f"Student(id={self.id}, fullname='{self.fullname}', gender='{self.gender}', "
                 f"status='{self.status}', dateOfBirth='{self.dateOfBirth}', academicYear='{self.academicYear}', "
                 f"address='{self.address}', ethnicity='{self.ethnicity}', religion='{self.religion}', "
-                f"nationality='{self.nationality}', departmentId='{self.departmentId}', classId='{self.class_id})")
+                f"nationality='{self.nationality}', departmentId='{self.departmentId}')")
 
 

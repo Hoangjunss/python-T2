@@ -316,6 +316,8 @@ class Teacher_List(tk.Frame):
                     value.get() if isinstance(value, (tk.Entry, ttk.Combobox)) else value.cget("text")
                     for value in self.value_labels
                 ]
+                print("value_labels count:", len(self.value_labels))
+                print("new_values:", new_values)
 
                 # Cập nhật dữ liệu vào đối tượng teacher_details
                 teacher_details.fullname = new_values[1]
@@ -323,7 +325,7 @@ class Teacher_List(tk.Frame):
                 teacher_details.address = new_values[3]
                 teacher_details.email = new_values[4]
                 teacher_details.phone = new_values[5]
-                teacher_details.username = new_values[6]
+                teacher_details.username = new_values[7]
                 teacher_details.department_id = teacher_details.department_id  # Không thay đổi ID khoa
                 teacher_details.status = new_values[8]
 

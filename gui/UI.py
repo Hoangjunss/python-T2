@@ -55,17 +55,17 @@ class AddStudentGUI(tk.Toplevel):
             id= self.generate_unique_id(),
             fullname=self.fullname,
             gender=self.gender_combobox.get(),
-            # dateOfBirth=self.textBirth.get(),
+            status="Active",
+            dateOfBirth=self.textBirth.get(),
             academicYear=self.textBranch.get(),
             address=self.textAddress.get("1.0", "end-1c"),
             ethnicity= self.textEthnicity.get(),
             religion= self.textReligion.get(),
-            departmentId=self.department_map.get(self.selected_department.get()),
-            class_id= self.class_map.get(self.selected_class.get())
+            departmentId=self.department_map.get(self.selected_department.get())
         )
         print(student)
         StudentDAO.save(student)
-        self.TrainImages()
+        # self.TrainImages()
 
     def TakeImages(self):        
             cam = cv2.VideoCapture(0)
@@ -229,9 +229,6 @@ class AddStudentGUI(tk.Toplevel):
         labelDepartment.config(bg ="white")
         labelDepartment.place(x =15, y =180)
 
-        labelClass = tk.Label(frame, text = "Lớp: ", font =("Times New Roman", 20))
-        labelClass.place(x = 15, y = 220)
-        labelClass.config(bg = "white")
 
         labelBirth = tk.Label(frame, text ="Ngày sinh: ", font = ("Times New Roman", 20))
         labelBirth.place(x =15, y = 260)
@@ -262,7 +259,7 @@ class AddStudentGUI(tk.Toplevel):
         # textID.insert(tk.END, "3123410083")
         # textID.config(state = tk.DISABLED)
 
-        buttonFaceId = tk.Button(frame, text = "Nhận diện khuôn mặt sinh viên", font = ("Times New Roman", 15), height = 2, bd = 0, bg = "white", fg= "red", command=self.open_camera)
+        # buttonFaceId = tk.Button(frame, text = "Nhận diện khuôn mặt sinh viên", font = ("Times New Roman", 15), height = 2, bd = 0, bg = "white", fg= "red", command=self.open_camera)
         # buttonChangeID = tk.Button(frame, text = "Sửa", font = ("Times New Roman", 15),height = 1, bd = 0, bg = "white", fg = "blue", highlightthickness = 1, highlightbackground = "blue")
         # buttonChangeID.place(x = 685, y = 62)
 
@@ -309,37 +306,7 @@ class AddStudentGUI(tk.Toplevel):
 
         """_department_
         """
-        # Lấy danh sách lớp từ database
-        self.class_data = self.fetch_all_class()
 
-        self.selected_class = tk.StringVar()
-        self.class_combobox = ttk.Combobox(frame, textvariable=self.selected_class, state="readonly", width=30)
-
-        # Lưu dictionary map giữa name và id
-        self.class_map = {c.name: c.id for c in self.class_data}
-        self.class_combobox['values'] = list(self.class_map.keys())
-
-        # Chọn giá trị mặc định
-        if self.class_data:
-            first_class = self.class_data[0].name
-            self.selected_class.set(first_class)
-
-        self.class_combobox.place(x=250, y=220)
-        self.class_combobox.bind("<<ComboboxSelected>>", self.on_combobox_change)
-
-
-
-        """_class_
-        """
-        # textClass = tk.Entry(frame, font=("Times New Roman", 20), width =30, bg ="white",borderwidth =1)
-        # textClass.place(x = 250, y =220)
-
-        # buttonChangeClass = tk.Button(frame, text = "Sửa", font = ("Times New Roman", 15), height = 1, bd = 0, bg = "white", fg = "blue"
-        #                             , highlightthickness = 1, highlightbackground = "blue")
-        # buttonChangeClass.place(x = 685, y = 222)
-
-        """_class_
-        """
 
         self.textBirth = tk.Entry(frame, font =("Times New Roman", 20), width =30, bg ="white",borderwidth =1)
         self.textBirth.place(x = 250, y =260)

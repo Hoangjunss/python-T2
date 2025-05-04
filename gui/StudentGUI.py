@@ -193,15 +193,12 @@ class Student_List(tk.Frame):
         department_of_student = DepartmentDAO.get_by_id(student_details.departmentId)
         department_name = getattr(department_of_student, "name", "Không có dữ liệu")
 
-        class_of_student = ClassDAO.get_by_id(student_details.class_id)
-        class_name = getattr(class_of_student, "name", "Không có dữ liệu")
 
         labels = [
             ("Mã SV:", student_details.id),
             ("Họ và tên:", student_details.fullname),
             ("Ngày sinh:", student_details.dateOfBirth),
             ("Giới tính:", student_details.gender),
-            ("Lớp:", class_name),
             ("Khoa:", department_name),
             ("Địa chỉ:", student_details.address),
             ("Dân tộc:", student_details.ethnicity),
@@ -224,7 +221,6 @@ class Student_List(tk.Frame):
             "fullname": student_details.fullname,
             "dateOfBirth": student_details.dateOfBirth,
             "gender": student_details.gender,
-            "class_id": student_details.class_id,
             "departmentId": student_details.departmentId,
             "address": student_details.address,
             "ethnicity": student_details.ethnicity,
@@ -330,16 +326,19 @@ class Student_List(tk.Frame):
                 if selected_department:
                     student_details.departmentId = selected_department.id
 
+                print("value_labels count:", len(self.value_labels))
+                print("new_values:", new_values)
+
                 # Cập nhật dữ liệu vào đối tượng student_details
                 student_details.fullname = new_values[1]
                 student_details.dateOfBirth = new_values[2]
                 student_details.gender = new_values[3]
-                student_details.address = new_values[6]
-                student_details.ethnicity = new_values[7]
-                student_details.religion = new_values[8]
-                student_details.nationality = new_values[9]
-                student_details.academicYear = new_values[10]
-                student_details.status = new_values[11]
+                student_details.address = new_values[5]
+                student_details.ethnicity = new_values[6]
+                student_details.religion = new_values[7]
+                student_details.nationality = new_values[8]
+                student_details.academicYear = new_values[9]
+                student_details.status = new_values[10]
 
                 # Kiểm tra giá trị trước khi cập nhật
                 if not all(new_values[1:]):  # Bỏ qua ID
@@ -371,6 +370,7 @@ class Student_List(tk.Frame):
             
             except Exception as e:
                 messagebox.showerror("Lỗi", f"Có lỗi xảy ra: {e}")
+                print(e)
 
 
         # Nếu mở từ nút "Sửa" ở cửa sổ chính, vào ngay chế độ chỉnh sửa
